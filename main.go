@@ -37,6 +37,8 @@ func main() {
 	sinceDays := flag.Int("since", 0, "Number of days to look back (0 = no limit)")
 	enableAuthors := flag.Bool("authors", false, "Enable author filtering using ALLOWED_AUTHOR_LIST environment variable")
 	format := flag.String("format", "rss", "Output format: 'rss' or 'markdown'")
+	mergeExisting := flag.String("merge-existing", "", "URL to existing RSS feed to merge with (optional)")
+	maxItems := flag.Int("max-items", 1000, "Maximum number of items to keep in merged feed")
 	flag.Parse()
 
 	if *feedURL == "" {
@@ -126,6 +128,17 @@ func main() {
 		}
 
 		filteredItems = append(filteredItems, item)
+	}
+
+	// Merge with existing feed if specified
+	if *mergeExisting != "" {
+		existingItems, err := fetchExistingFeed(*mergeExisting)
+		if err != nil {
+			// Log warning but continue with just the new items
+			fmt.Fprintf(os.Stderr, "Warning: could not fetch existing feed: %v\n", err)
+		} else {
+			filteredItems = mergeAndDeduplicateItems(filteredItems, existingItems, *maxItems)
+		}
 	}
 
 	// Output in the requested format
@@ -274,4 +287,90 @@ func escapeXML(s string) string {
 	s = strings.ReplaceAll(s, "\"", "&quot;")
 	s = strings.ReplaceAll(s, "'", "&apos;")
 	return s
+}
+
+// fetchExistingFeed downloads and parses an existing RSS feed from a URL
+func fetchExistingFeed(feedURL string) ([]Item, error) {
+	resp, err := http.Get(feedURL)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	// If the feed doesn't exist yet (404), return empty list
+	if resp.StatusCode == http.StatusNotFound {
+		return []Item{}, nil
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("received status code %d", resp.StatusCode)
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var rss RSS
+	if err := xml.Unmarshal(body, &rss); err != nil {
+		return nil, err
+	}
+
+	return rss.Channel.Items, nil
+}
+
+// mergeAndDeduplicateItems combines new and existing items, removes duplicates,
+// sorts by date (newest first), and limits to maxItems
+func mergeAndDeduplicateItems(newItems, existingItems []Item, maxItems int) []Item {
+	// Use a map to deduplicate by GUID (or Link if GUID is empty)
+	itemMap := make(map[string]Item)
+
+	// Add existing items first
+	for _, item := range existingItems {
+		key := item.GUID
+		if key == "" {
+			key = item.Link
+		}
+		itemMap[key] = item
+	}
+
+	// Add new items (will overwrite existing if GUID/Link matches)
+	for _, item := range newItems {
+		key := item.GUID
+		if key == "" {
+			key = item.Link
+		}
+		itemMap[key] = item
+	}
+
+	// Convert map back to slice
+	merged := make([]Item, 0, len(itemMap))
+	for _, item := range itemMap {
+		merged = append(merged, item)
+	}
+
+	// Sort by publication date (newest first)
+	sortItemsByDate(merged)
+
+	// Limit to maxItems
+	if len(merged) > maxItems {
+		merged = merged[:maxItems]
+	}
+
+	return merged
+}
+
+// sortItemsByDate sorts items by publication date in descending order (newest first)
+func sortItemsByDate(items []Item) {
+	for i := 0; i < len(items)-1; i++ {
+		for j := i + 1; j < len(items); j++ {
+			date1, err1 := parseRSSDate(items[i].PubDate)
+			date2, err2 := parseRSSDate(items[j].PubDate)
+
+			// If both dates are valid and date2 is newer, swap
+			if err1 == nil && err2 == nil && date2.After(date1) {
+				items[i], items[j] = items[j], items[i]
+			}
+		}
+	}
 }

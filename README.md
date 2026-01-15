@@ -61,6 +61,8 @@ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --s
 - `--since` (optional): Number of days to look back (0 = no limit, default: 0)
 - `--authors` (optional): Enable author filtering using the `ALLOWED_AUTHOR_LIST` environment variable
 - `--format` (optional): Output format: `rss` or `markdown` (default: `rss`)
+- `--merge-existing` (optional): URL to existing RSS feed to merge with (useful for accumulating entries over time)
+- `--max-items` (optional): Maximum number of items to keep in merged feed (default: 100)
 
 ## Environment Variables
 
@@ -114,7 +116,12 @@ The repository includes a GitHub Action workflow (`.github/workflows/generate-rs
 The workflow will:
 - Run automatically every 24 hours at midnight UTC
 - Can be triggered manually from the Actions tab
-- Generate a `filtered-feed.xml` file and upload it to GitHub Releases (tagged as "latest")
+- Fetch the existing filtered feed from releases (if it exists)
+- Merge new filtered entries with existing ones, removing duplicates
+- Keep up to 100 most recent entries (configurable via `--max-items`)
+- Upload the updated `filtered-feed.xml` to GitHub Releases (tagged as "latest")
+
+This approach ensures that even though the original RSS feed only retains the last 10 entries, your filtered feed accumulates posts over time up to the configured maximum.
 
 The RSS feed will be available at: `https://github.com/<your-username>/<your-repo>/releases/download/latest/filtered-feed.xml`
 
@@ -145,3 +152,11 @@ $ export ALLOWED_AUTHOR_LIST="Giovanni Lanzani
 XiaoHan Li"
 $ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --authors --since 30 > filtered-feed.xml
 ```
+
+### Merging with existing feed (accumulate entries over time)
+```bash
+$ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" \
+  --merge-existing "https://example.com/existing-feed.xml" \
+  --max-items 100 > updated-feed.xml
+```
+This fetches the existing feed, merges it with newly filtered entries, removes duplicates (by GUID or link), sorts by date (newest first), and limits to 100 items.

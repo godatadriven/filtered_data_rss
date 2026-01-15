@@ -29,7 +29,8 @@ jobs:
           FEED_URL: ${{ vars.FEED_URL }}
           ALLOWED_AUTHOR_LIST: ${{ vars.ALLOWED_AUTHOR_LIST }}
         run: |
-          ./feed-filter --feed "$FEED_URL" --authors --format rss > filtered-feed.xml
+          EXISTING_FEED_URL="https://github.com/${{ github.repository }}/releases/download/latest/filtered-feed.xml"
+          ./feed-filter --feed "$FEED_URL" --authors --format rss --merge-existing "$EXISTING_FEED_URL" --max-items 100 > filtered-feed.xml
 
       - name: Create or update release
         uses: softprops/action-gh-release@v1
