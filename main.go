@@ -171,7 +171,7 @@ func shouldFilter(link string) bool {
 }
 
 // shouldFilterAuthor returns true if the author should be filtered out
-// Filters: email addresses (contains @) and business titles (contains comma)
+// Filters: email addresses (contains @)
 func shouldFilterAuthor(author string) bool {
 	if author == "" {
 		return false
@@ -179,11 +179,6 @@ func shouldFilterAuthor(author string) bool {
 
 	// Filter out email addresses
 	if strings.Contains(author, "@") {
-		return true
-	}
-
-	// Filter out authors with business titles (indicated by comma)
-	if strings.Contains(author, ",") {
 		return true
 	}
 

@@ -6,7 +6,7 @@ A Go command-line tool that filters RSS feeds to show only technical blog posts 
 
 - Fetches and parses RSS feeds
 - Filters out marketing content (posts with `/news/` or `/articles/` in the URL path)
-- Filters out posts by authors with email addresses or business titles
+- Filters out posts by authors with email addresses
 - Optional whitelist of allowed authors from environment variable
 - Optional date filtering to show only recent posts
 - Outputs in RSS (default) or Markdown format
@@ -62,7 +62,7 @@ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --s
 - `--authors` (optional): Enable author filtering using the `ALLOWED_AUTHOR_LIST` environment variable
 - `--format` (optional): Output format: `rss` or `markdown` (default: `rss`)
 - `--merge-existing` (optional): URL to existing RSS feed to merge with (useful for accumulating entries over time)
-- `--max-items` (optional): Maximum number of items to keep in merged feed (default: 100)
+- `--max-items` (optional): Maximum number of items to keep in merged feed (default: 1000)
 
 ## Environment Variables
 
@@ -97,7 +97,6 @@ The tool filters OUT posts that:
 - Have `post_type=news` in query parameters
 - Have `post_type=article` or `post_type=articles` in query parameters
 - Have authors with email addresses (containing `@`)
-- Have authors with business titles (containing `,`)
 - Have authors not in the allowed authors list (if `--authors` flag is enabled)
 
 This keeps only technical blog posts from real consultant names.
@@ -118,7 +117,7 @@ The workflow will:
 - Can be triggered manually from the Actions tab
 - Fetch the existing filtered feed from releases (if it exists)
 - Merge new filtered entries with existing ones, removing duplicates
-- Keep up to 100 most recent entries (configurable via `--max-items`)
+- Keep up to 1000 most recent entries (configurable via `--max-items`)
 - Upload the updated `filtered-feed.xml` to GitHub Releases (tagged as "latest")
 
 This approach ensures that even though the original RSS feed only retains the last 10 entries, your filtered feed accumulates posts over time up to the configured maximum.
@@ -157,6 +156,6 @@ $ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" -
 ```bash
 $ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" \
   --merge-existing "https://example.com/existing-feed.xml" \
-  --max-items 100 > updated-feed.xml
+  --max-items 1000 > updated-feed.xml
 ```
-This fetches the existing feed, merges it with newly filtered entries, removes duplicates (by GUID or link), sorts by date (newest first), and limits to 100 items.
+This fetches the existing feed, merges it with newly filtered entries, removes duplicates (by GUID or link), sorts by date (newest first), and limits to 1000 items.
