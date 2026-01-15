@@ -1,0 +1,3 @@
+# Allowed technical consultant authors
+Giovanni Lanzani
+XiaoHan Li
