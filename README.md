@@ -1,15 +1,16 @@
 # RSS Feed Filter
 
-A Go command-line tool that filters RSS feeds to show only technical blog posts (excluding marketing/news content) and outputs them as a Markdown list.
+A Go command-line tool that filters RSS feeds to show only technical blog posts (excluding marketing/news content) and outputs them in RSS or Markdown format.
 
 ## Features
 
 - Fetches and parses RSS feeds
 - Filters out marketing content (posts with `/news/` or `/articles/` in the URL path)
 - Filters out posts by authors with email addresses or business titles
-- Optional whitelist of allowed authors from a text file
+- Optional whitelist of allowed authors from environment variable
 - Optional date filtering to show only recent posts
-- Outputs clean Markdown list with linked titles and authors
+- Outputs in RSS (default) or Markdown format
+- GitHub Actions integration for automated RSS feed generation
 
 ## Installation
 
@@ -19,9 +20,14 @@ go build -o feed-filter
 
 ## Usage
 
-### Basic usage (all technical posts):
+### Basic usage (RSS output, all technical posts):
 ```bash
 go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed"
+```
+
+### Output as Markdown:
+```bash
+go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --format markdown
 ```
 
 ### Filter by date (last N days):
@@ -31,29 +37,51 @@ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --s
 
 ### Filter by allowed authors:
 ```bash
-go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --authors allowed_authors.txt
+export ALLOWED_AUTHOR_LIST="Giovanni Lanzani
+XiaoHan Li
+Katarzyna Kusznierczuk"
+go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --authors
 ```
 
 ### Combine all filters:
 ```bash
-go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 90 --authors allowed_authors.txt
+export ALLOWED_AUTHOR_LIST="Giovanni Lanzani
+XiaoHan Li"
+go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 90 --authors --format rss
 ```
 
 ### Using the compiled binary:
 ```bash
-./feed-filter --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 30
+./feed-filter --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 30 --format markdown
 ```
 
 ## Parameters
 
 - `--feed` (required): RSS feed URL to fetch and filter
 - `--since` (optional): Number of days to look back (0 = no limit, default: 0)
-- `--authors` (optional): Path to text file with allowed author names (one per line)
+- `--authors` (optional): Enable author filtering using the `ALLOWED_AUTHOR_LIST` environment variable
+- `--format` (optional): Output format: `rss` or `markdown` (default: `rss`)
 
-## Output Format
+## Environment Variables
 
-The tool outputs a Markdown list to stdout:
+- `ALLOWED_AUTHOR_LIST`: Newline-separated list of allowed author names. Required when using `--authors` flag.
 
+## Output Formats
+
+### RSS Format (default)
+Outputs a valid RSS 2.0 XML feed:
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Filtered Technical Blog Posts</title>
+    ...
+  </channel>
+</rss>
+```
+
+### Markdown Format
+Outputs a Markdown list to stdout:
 ```markdown
 - [Post Title](https://example.com/post-url) - Author Name
 - [Another Post](https://example.com/another-post) - Another Author
@@ -68,26 +96,52 @@ The tool filters OUT posts that:
 - Have `post_type=article` or `post_type=articles` in query parameters
 - Have authors with email addresses (containing `@`)
 - Have authors with business titles (containing `,`)
-- Have authors not in the allowed authors file (if `--authors` is specified)
+- Have authors not in the allowed authors list (if `--authors` flag is enabled)
 
 This keeps only technical blog posts from real consultant names.
 
-## Authors File Format
+## GitHub Actions Integration
 
-The authors file should contain one author name per line, exactly as it appears in the RSS feed:
+The repository includes a GitHub Action workflow (`.github/workflows/generate-rss.yml`) that automatically generates a filtered RSS feed every 24 hours.
+
+### Setup
+
+1. Go to your repository Settings → Secrets and variables → Actions → Variables
+2. Add the following repository variables:
+   - `FEED_URL`: The RSS feed URL to filter (e.g., `https://xebia.com/blog/category/domains/data-ai/feed`)
+   - `ALLOWED_AUTHOR_LIST`: Newline-separated list of allowed authors (e.g., `Giovanni Lanzani\nXiaoHan Li`)
+
+The workflow will:
+- Run automatically every 24 hours at midnight UTC
+- Can be triggered manually from the Actions tab
+- Generate a `filtered-feed.xml` file and upload it to GitHub Releases (tagged as "latest")
+
+The RSS feed will be available at: `https://github.com/<your-username>/<your-repo>/releases/download/latest/filtered-feed.xml`
+
+### Author List Format
+
+The `ALLOWED_AUTHOR_LIST` environment variable should contain one author name per line, exactly as it appears in the RSS feed:
 
 ```
-# This is a comment - lines starting with # are ignored
 Giovanni Lanzani
 XiaoHan Li
 Katarzyna Kusznierczuk
 ```
 
-Empty lines are also ignored. Names are case-sensitive and must match exactly.
+Names are case-sensitive and must match exactly. Lines starting with `#` are treated as comments and ignored.
 
-## Example
+## Examples
 
+### Markdown output
 ```bash
-$ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 7
+$ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --since 7 --format markdown
 - [Realist's Guide to Hybrid Mesh Architecture (1): Single Source of Truth vs Democratisation](https://xebia.com/blog/realists-guide-to-hybrid-mesh-architecture-1-single-source-of-truth-vs-democratisation/) - XiaoHan Li
+- [How to Reap the Benefits of LLM-Powered Coding Assistants, While Avoiding Their Pitfalls](https://xebia.com/blog/how-reap-benefits-llm-powered-coding-assistants-avoiding-pitfalls/) - Giovanni Lanzani
+```
+
+### RSS output with author filtering
+```bash
+$ export ALLOWED_AUTHOR_LIST="Giovanni Lanzani
+XiaoHan Li"
+$ go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed" --authors --since 30 > filtered-feed.xml
 ```

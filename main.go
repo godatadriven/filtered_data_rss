@@ -22,16 +22,21 @@ type Channel struct {
 }
 
 type Item struct {
-	Title   string `xml:"title"`
-	Link    string `xml:"link"`
-	PubDate string `xml:"pubDate"`
-	Creator string `xml:"http://purl.org/dc/elements/1.1/ creator"`
+	Title       string   `xml:"title"`
+	Link        string   `xml:"link"`
+	PubDate     string   `xml:"pubDate"`
+	Creator     string   `xml:"http://purl.org/dc/elements/1.1/ creator"`
+	Description string   `xml:"description"`
+	Content     string   `xml:"http://purl.org/rss/1.0/modules/content/ encoded"`
+	GUID        string   `xml:"guid"`
+	Categories  []string `xml:"category"`
 }
 
 func main() {
 	feedURL := flag.String("feed", "", "RSS feed URL (required)")
 	sinceDays := flag.Int("since", 0, "Number of days to look back (0 = no limit)")
-	authorsFile := flag.String("authors", "", "Path to file with allowed author names (one per line)")
+	enableAuthors := flag.Bool("authors", false, "Enable author filtering using ALLOWED_AUTHOR_LIST environment variable")
+	format := flag.String("format", "rss", "Output format: 'rss' or 'markdown'")
 	flag.Parse()
 
 	if *feedURL == "" {
@@ -40,15 +45,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Load allowed authors if file is specified
+	// Validate format
+	if *format != "rss" && *format != "markdown" {
+		fmt.Fprintf(os.Stderr, "Error: --format must be 'rss' or 'markdown'\n")
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	// Load allowed authors if --authors flag is present
 	var allowedAuthors map[string]bool
-	if *authorsFile != "" {
-		var err error
-		allowedAuthors, err = loadAllowedAuthors(*authorsFile)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error loading authors file: %v\n", err)
+	if *enableAuthors {
+		allowedAuthorList := os.Getenv("ALLOWED_AUTHOR_LIST")
+		if allowedAuthorList == "" {
+			fmt.Fprintf(os.Stderr, "Error: --authors flag requires ALLOWED_AUTHOR_LIST environment variable to be set\n")
 			os.Exit(1)
 		}
+		allowedAuthors = loadAllowedAuthorsFromEnv(allowedAuthorList)
 	}
 
 	// Fetch the feed
@@ -83,7 +95,8 @@ func main() {
 		cutoffDate = time.Now().AddDate(0, 0, -*sinceDays)
 	}
 
-	// Filter and output items
+	// Filter items
+	var filteredItems []Item
 	for _, item := range rss.Channel.Items {
 		// Check if URL contains post_type=news or post_type=article
 		if shouldFilter(item.Link) {
@@ -95,7 +108,7 @@ func main() {
 			continue
 		}
 
-		// Check if author is in allowed list (if authors file is specified)
+		// Check if author is in allowed list (if authors filtering is enabled)
 		if allowedAuthors != nil && !allowedAuthors[item.Creator] {
 			continue
 		}
@@ -112,12 +125,14 @@ func main() {
 			}
 		}
 
-		// Output as Markdown list item
-		author := item.Creator
-		if author == "" {
-			author = "Unknown"
-		}
-		fmt.Printf("- [%s](%s) - %s\n", item.Title, item.Link, author)
+		filteredItems = append(filteredItems, item)
+	}
+
+	// Output in the requested format
+	if *format == "markdown" {
+		outputMarkdown(filteredItems)
+	} else {
+		outputRSS(filteredItems, *feedURL)
 	}
 }
 
@@ -185,26 +200,78 @@ func parseRSSDate(dateStr string) (time.Time, error) {
 	return time.Time{}, fmt.Errorf("unable to parse date: %s", dateStr)
 }
 
-// loadAllowedAuthors reads a file with author names (one per line) and returns a set
-func loadAllowedAuthors(filePath string) (map[string]bool, error) {
-	file, err := os.Open(filePath)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
+// loadAllowedAuthorsFromEnv parses the ALLOWED_AUTHOR_LIST environment variable
+// which contains author names separated by newlines
+func loadAllowedAuthorsFromEnv(authorList string) map[string]bool {
 	authors := make(map[string]bool)
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(strings.NewReader(authorList))
 	for scanner.Scan() {
 		name := strings.TrimSpace(scanner.Text())
 		if name != "" && !strings.HasPrefix(name, "#") { // Skip empty lines and comments
 			authors[name] = true
 		}
 	}
+	return authors
+}
 
-	if err := scanner.Err(); err != nil {
-		return nil, err
+// outputMarkdown prints filtered items as a Markdown list
+func outputMarkdown(items []Item) {
+	for _, item := range items {
+		author := item.Creator
+		if author == "" {
+			author = "Unknown"
+		}
+		fmt.Printf("- [%s](%s) - %s\n", item.Title, item.Link, author)
+	}
+}
+
+// outputRSS generates and prints an RSS feed with the filtered items
+func outputRSS(items []Item, originalFeedURL string) {
+	fmt.Println(`<?xml version="1.0" encoding="UTF-8"?>`)
+	fmt.Println(`<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">`)
+	fmt.Println(`  <channel>`)
+	fmt.Println(`    <title>Filtered Technical Blog Posts</title>`)
+	fmt.Printf("    <link>%s</link>\n", escapeXML(originalFeedURL))
+	fmt.Println(`    <description>Filtered feed of technical blog posts</description>`)
+	fmt.Printf("    <lastBuildDate>%s</lastBuildDate>\n", time.Now().Format(time.RFC1123Z))
+
+	for _, item := range items {
+		fmt.Println(`    <item>`)
+		fmt.Printf("      <title>%s</title>\n", escapeXML(item.Title))
+		fmt.Printf("      <link>%s</link>\n", escapeXML(item.Link))
+		if item.GUID != "" {
+			fmt.Printf("      <guid>%s</guid>\n", escapeXML(item.GUID))
+		}
+		if item.PubDate != "" {
+			fmt.Printf("      <pubDate>%s</pubDate>\n", escapeXML(item.PubDate))
+		}
+		if item.Creator != "" {
+			fmt.Printf("      <dc:creator>%s</dc:creator>\n", escapeXML(item.Creator))
+		}
+		if item.Description != "" {
+			fmt.Printf("      <description>%s</description>\n", escapeXML(item.Description))
+		}
+		if item.Content != "" {
+			fmt.Printf("      <content:encoded><![CDATA[%s]]></content:encoded>\n", item.Content)
+		}
+		for _, category := range item.Categories {
+			if category != "" {
+				fmt.Printf("      <category>%s</category>\n", escapeXML(category))
+			}
+		}
+		fmt.Println(`    </item>`)
 	}
 
-	return authors, nil
+	fmt.Println(`  </channel>`)
+	fmt.Println(`</rss>`)
+}
+
+// escapeXML escapes special XML characters
+func escapeXML(s string) string {
+	s = strings.ReplaceAll(s, "&", "&amp;")
+	s = strings.ReplaceAll(s, "<", "&lt;")
+	s = strings.ReplaceAll(s, ">", "&gt;")
+	s = strings.ReplaceAll(s, "\"", "&quot;")
+	s = strings.ReplaceAll(s, "'", "&apos;")
+	return s
 }
