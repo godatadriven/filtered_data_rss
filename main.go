@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -100,16 +99,6 @@ func main() {
 	// Filter items
 	var filteredItems []Item
 	for _, item := range rss.Channel.Items {
-		// Check if URL contains post_type=news or post_type=article
-		if shouldFilter(item.Link) {
-			continue
-		}
-
-		// Check if author should be filtered (email or has business title)
-		if shouldFilterAuthor(item.Creator) {
-			continue
-		}
-
 		// Check if author is in allowed list (if authors filtering is enabled)
 		if allowedAuthors != nil && !allowedAuthors[item.Creator] {
 			continue
@@ -147,42 +136,6 @@ func main() {
 	} else {
 		outputRSS(filteredItems, *feedURL)
 	}
-}
-
-// shouldFilter returns true if the URL contains /news/ or /articles/ in the path
-// or has post_type=news or post_type=article in query parameters
-func shouldFilter(link string) bool {
-	parsedURL, err := url.Parse(link)
-	if err != nil {
-		return false
-	}
-
-	// Check URL path for /news/ or /articles/
-	path := parsedURL.Path
-	if strings.Contains(path, "/news/") || strings.Contains(path, "/articles/") {
-		return true
-	}
-
-	// Also check query parameters as fallback
-	query := parsedURL.Query()
-	postType := query.Get("post_type")
-
-	return postType == "news" || postType == "article" || postType == "articles"
-}
-
-// shouldFilterAuthor returns true if the author should be filtered out
-// Filters: email addresses (contains @)
-func shouldFilterAuthor(author string) bool {
-	if author == "" {
-		return false
-	}
-
-	// Filter out email addresses
-	if strings.Contains(author, "@") {
-		return true
-	}
-
-	return false
 }
 
 // parseRSSDate parses common RSS date formats

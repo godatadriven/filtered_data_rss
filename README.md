@@ -1,12 +1,10 @@
 # RSS Feed Filter
 
-A Go command-line tool that filters RSS feeds to show only technical blog posts (excluding marketing/news content) and outputs them in RSS or Markdown format.
+A Go command-line tool that filters RSS feeds and outputs them in RSS or Markdown format.
 
 ## Features
 
 - Fetches and parses RSS feeds
-- Filters out marketing content (posts with `/news/` or `/articles/` in the URL path)
-- Filters out posts by authors with email addresses
 - Optional whitelist of allowed authors from environment variable
 - Optional date filtering to show only recent posts
 - Outputs in RSS (default) or Markdown format
@@ -20,7 +18,7 @@ go build -o feed-filter
 
 ## Usage
 
-### Basic usage (RSS output, all technical posts):
+### Basic usage (RSS output):
 ```bash
 go run main.go --feed "https://xebia.com/blog/category/domains/data-ai/feed"
 ```
@@ -92,14 +90,7 @@ Outputs a Markdown list to stdout:
 ## Filtering Logic
 
 The tool filters OUT posts that:
-- Contain `/news/` in the URL path
-- Contain `/articles/` in the URL path
-- Have `post_type=news` in query parameters
-- Have `post_type=article` or `post_type=articles` in query parameters
-- Have authors with email addresses (containing `@`)
 - Have authors not in the allowed authors list (if `--authors` flag is enabled)
-
-This keeps only technical blog posts from real consultant names.
 
 ## GitHub Actions Integration
 

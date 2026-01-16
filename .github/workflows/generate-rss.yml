@@ -1,4 +1,4 @@
-name: Generate Filtered RSS Feed
+name: Generate RSS Feed
 
 on:
   schedule:
