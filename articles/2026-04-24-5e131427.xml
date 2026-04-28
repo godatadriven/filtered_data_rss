@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Airflow 2 reaches end of life</title>
+      <link>https://xebia.com/blog/airflow-2-reaches-end-of-life/</link>
+      <guid>https://xebia.com/?p=152147</guid>
+      <pubDate>Fri, 24 Apr 2026 11:00:00 +0000</pubDate>
+      <dc:creator>Kris Geusebroek</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Airflow 2 reaches end of life</h1>
+  <p></p>
+</div>
+
+<article>
+  <h1 class="wp-block-heading">Apache Airflow 2 has reached end of life</h1>
+
+
+
+
+<p>April 22, 2026: Official support for Open Source Apache Airflow 2 ends. No more security patches, no more bug fixes, no more provider package updates. If you&#8217;re still running Airflow 2.x in production, you&#8217;re now on your own.</p>
+
+
+
+
+<p>This isn&#8217;t a surprise — the community announced the timeline well in advance, and Airflow 3.0 shipped back in April 2025, giving teams a full year to prepare. But as anyone who has managed a production Airflow deployment knows, &#8220;a year to migrate&#8221; and &#8220;we&#8217;ll get to it eventually&#8221; have a way of meaning the same thing.</p>
+
+
+
+
+<h2 class="wp-block-heading">What EOL actually means for your team</h2>
+
+
+
+
+<p>The immediate risk isn&#8217;t that your DAGs will stop running. Airflow 2 doesn&#8217;t have a kill switch. The real risks are slower and more subtle: any CVE discovered in Airflow 2 or its dependencies from this point forward will go unpatched. Provider packages for Snowflake, Databricks, BigQuery, and others will begin requiring Airflow 3, and maintaining backward compatibility will become increasingly difficult until it&#8217;s dropped entirely.</p>
+
+
+
+
+<h2 class="wp-block-heading">Where to start learning</h2>
+
+
+
+
+<p>If you&#8217;re planning your migration — or learning Airflow for the first time in a post-Airflow-2 world — the second edition of <a href="https://www.manning.com/books/data-pipelines-with-apache-airflow-second-edition" rel="noopener"><em>Data Pipelines with Apache Airflow</em></a> (Manning, 2026) by Julian de Ruiter, Ismael Cabral, Kris Geusebroek, Daniel van der Ende, and Bas Harenslak is worth your time. Unlike resources that were written for Airflow 2 and later updated with migration notes, this edition was built from the ground up around Airflow 3. All examples, explanations, and deployment patterns assume Airflow 3 as the baseline, covering everything from the Taskflow API and deferrable operators to event-driven scheduling and LLM integration. Whether you&#8217;re refactoring existing DAGs or designing new pipelines, having a reference that speaks the same version as your target environment makes the process considerably smoother.</p>
+
+
+
+
+<h2 class="wp-block-heading">Airflow 3 is more than an upgrade — it&#8217;s a rethink</h2>
+
+
+
+
+<p>The migration to Airflow 3 isn&#8217;t just a version bump. Several foundational things have changed:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>SubDAGs are gone entirely (you&#8217;ll need Task Groups or dynamic task mapping).</li>
+<li>Deprecated context variables like <code>execution_date</code>, <code>prev_ds</code>, and <code>next_ds</code> have been removed.</li>
+<li>Standard operators have moved to <code>apache-airflow-providers-standard</code>.</li>
+<li>The old monolithic webserver has been split into a separate API server and DAG processor. </li>
+</ul>
+
+
+
+
+<p>These are meaningful architectural changes that will require updating your DAGs, your deployment configs, and likely your team&#8217;s mental model of how Airflow works.</p>
+
+
+
+
+<p>On the upside, Airflow 3 brings genuinely useful new capabilities:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Built-in DAG versioning lets you track which version of a DAG was used for any given run.</li>
+<li>Event-driven scheduling means you can trigger pipelines from message queues rather than polling with sensors.</li>
+<li>Human-in-the-loop task execution lets you pause workflows for approval or validation — a feature that AI/ML teams have been cobbling together with external tools for years.</li>
+<li>And the completely rebuilt UI is noticeably faster and more intuitive.</li>
+</ul>
+
+
+
+
+<p>This is in no way a final and comprehensive list, but it&#8217;s a good place to start.</p>
+
+
+
+
+<h2 class="wp-block-heading">The clock is ticking</h2>
+
+
+
+
+<p>Every week you stay on Airflow 2, the gap between your environment and the ecosystem widens. Provider packages move forward, community support shifts its attention, and the migration itself doesn&#8217;t get any simpler.  If you haven&#8217;t started yet, now is the time to spin up an Airflow 3 instance, run your DAGs through the migration tooling, and start identifying what breaks. The sooner you confront the rough edges, the sooner you&#8217;re running on supported, modern infrastructure — and the sooner you can take advantage of what Airflow 3 actually brings to the table.</p>
+
+
+
+
+<h2 class="wp-block-heading">Other useful resources</h2>
+
+
+
+
+<p>Next to the book <a href="https://www.manning.com/books/data-pipelines-with-apache-airflow-second-edition" rel="noopener"><em>Data Pipelines with Apache Airflow</em></a> (Manning, 2026) mentioned above, there are a number of other resources that can help you get started with Airflow 3:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><a href="https://airflow.apache.org/docs/apache-airflow/stable/installation/upgrading_to_airflow3.html#upgrading-to-airflow-3" rel="noopener">The official Airflow 3 upgrade guide</a>.</li>
+<li><a href="https://docs.astral.sh/ruff/rules/#airflow-air" rel="noopener">Ruffs linting rules</a> to check Airflow 3 compatibility.</li>
+<li><a href="https://www.astronomer.io/blog/upgrading-airflow-2-to-airflow-3-a-checklist-for-2026/" rel="noopener">Astronomer&#8217;s upgrade guide</a>.</li>
+</ul>
+
+
+
+
+<hr class="wp-block-heading" /></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
