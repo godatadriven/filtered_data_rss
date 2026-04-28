@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Fabric Workspace Structure That Scales</title>
+      <link>https://xebia.com/blog/fabric-workspace-structure-that-scales/</link>
+      <guid>https://xebia.com/?p=126335</guid>
+      <pubDate>Mon, 01 Dec 2025 23:00:00 +0000</pubDate>
+      <dc:creator>Rik Adegeest</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Fabric Workspace Structure That Scales</h1>
+  <p></p>
+</div>
+
+<article>
+  <h2 class="wp-block-heading">About This Series</h2>
+
+
+
+
+<p>Building a data solutions on Microsoft Fabric involves tackling common challenges every team encounters: workspace organization, naming conventions, deployment pipelines, validation frameworks, cluster sizing and many others. Early projects often waste valuable time thinking about these basics, when the focus could also be on the actual building on the platform.</p>
+
+
+
+
+<p>This series shares the opinionated, field-tested patterns Xebia&#8217;s Data Engineers settled on after multiple proof-of-concepts and production deliveries. Think of it as a shortcut: copy what works, adapt where your context differs, and spend your energy on the actual data engineering.</p>
+
+
+
+ **Series outline:**
+1. **Internal workspace setup &amp; naming** (this post)
+2. Project workspace setup (multi-developer scaling)
+3. Deployments &amp; Git integration
+4. Data validation &amp; logging
+5. Automated workspace provisioning
+6. Cluster sizing heuristics 
+
+
+
+<h2 class="wp-block-heading">The Problem: Workspace Chaos</h2>
+
+
+
+
+<p>Open any Fabric workspace a few weeks into a project and you&#8217;ll often find chaos: notebooks dumped at root, pipelines named &#8220;Test&#8221; or &#8220;Ingest2_final&#8221;, tables everywhere, someone tried a prefix scheme (`raw_`, `bronze_`), someone else ignored it. The result: New project members spent a lot of time searching for functionalities and changes are risky because nobody knows what triggers what.</p>
+
+
+
+
+<p>Here&#8217;s what that mess looks like:</p>
+
+
+
+
+<p><img decoding="async" alt="Messy workspace structure" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2025/12/fabric-workspace-structure-that-scales-mess.jpeg" title="microsoft"></p>
+
+
+
+
+<p><strong>This post&#8217;s fix:</strong> A simple, ordered structure that makes &#8220;where does this go?&#8221; obvious. Numbered stage folders at the top (1_ingest, 2_validate, 3_transform), shared assets at root, no item prefixes baked into object names, and the lakehouse item positioned where people expect data. Discoverability beats cleverness.</p>
+
+
+
+<blockquote>
+<p><strong>Note:</strong> This is an example setup. Your stages and names will vary. The principle stays: it must be easy to find what you are searching for.</p>
+</blockquote>
+
+
+
+<h2 class="wp-block-heading">Quick Fabric Concepts (30-Second Glossary)</h2>
+
+
+
+
+<p> <table style="border-collapse: collapse;width: 100%">
+<thead>
+<tr>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Term</th>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">One-liner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Lakehouse</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Storage + metadata friendly interface for files &amp; tables.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Pipeline</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Orchestration unit to schedule or chain activities (ingest, run notebooks).</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Notebook</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Interactive code (Spark / Python / SQL) for transformations &amp; exploration.</td>
+</tr>
+</tbody>
+</table> </p>
+
+
+
+
+<p>That&#8217;s all we need for this post.</p>
+
+
+
+
+<h2 class="wp-block-heading">Why Structure (Not Prefixes) Wins &amp; Guiding Principles</h2>
+
+
+
+
+<p>Instead of easing the mess with longer or clever names, we make it disappear with a <em>predictable skeleton</em>.</p>
+
+
+
+
+<p><strong>Why skip prefixes?</strong> Fabric&#8217;s UI already shows icons for pipelines, notebooks, and tables, you can see <em>what</em> something is at a glance. Adding <code>pl_</code>, <code>nb_</code>, or <code>tbl_</code> prefixes (common in Azure conventions) just creates noise. Instead, we leverage <strong>folders for logical groupings</strong> (stages like <code>1_ingest/</code>, <code>2_validate/</code>) so the structure tells the story, not the name.</p>
+
+
+
+
+<p>Here&#8217;s the solution first so you can anchor everything that follows:</p>
+
+
+
+
+<p><img decoding="async" alt="Clean workspace structure" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2025/12/fabric-workspace-structure-that-scales-clean.jpeg" title="microsoft"></p>
+
+
+
+
+<p><strong>Zero guesswork</strong> – A teammate adding a new quality check goes straight to <code>2_validate/notebooks</code> without asking.</p>
+
+
+
+
+<p><strong>Guiding principles:</strong></p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Descriptive names</strong> – Plain words (&#8220;validate_orders&#8221;) over abbreviations; icons + folder give enough context.</li>
+<li><strong>Stage vs Root</strong> – Stage folders contain artifacts <em>only that stage needs</em>. Anything reused (tables, helpers) sits at root so you don&#8217;t duplicate or guess.</li>
+<li><strong>Process ordering</strong> – Numbers communicate sequence at a glance; no decoding required.</li>
+<li><strong>Consistency over creativity</strong> – One <code>verb_object</code> pattern and casing style keeps scanning fast.</li>
+</ul>
+
+
+
+
+<h2 class="wp-block-heading">Stage vs Root</h2>
+
+
+
+
+<p>If only one stage needs it (an ingest-specific notebook, a validation pipeline), it goes inside that stage folder. If multiple stages use it (the lakehouse, a config file, a shared utility), it lives at root. This kills duplication and the &#8220;where did I put that helper?&#8221; hunt.</p>
+
+
+
+
+<p>Think of stages as <strong>logical groupings</strong> for a slice of flow. Each stage holds only what that phase of processing requires to run. Anything that multiple phases rely on moves to root (<code>lakehouse</code>, <code>config/</code>, <code>utils/</code>). That clear boundary is the main reason people stop guessing.</p>
+
+
+
+
+<p>Inside a stage apply the same simplicity rule: keep it flat until finding things slows you down. One notebook? Drop it straight in. A handful? Still flat. Only introduce a minimal subfolder (domain, source system, business area) after real navigation friction appears. Depth is a tax, add it deliberately.</p>
+
+
+
+
+<h2 class="wp-block-heading">Evolving the Structure</h2>
+
+
+
+
+<p>Start minimal, grow deliberately. The skeleton above works for most single-team workspaces. Expand only when pain appears:</p>
+
+
+
+
+<p><strong>When to add a new stage:</strong> Need a curated layer for BI consumption? Add 4_publish/ with notebooks that shape data specifically for reporting. Need a raw landing zone separate from transformation? Introduce an extra stage and rename the existing ones so the numbers reflect the new flow (for example: 1_land/, 2_ingest/, 3_validate/, 4_transform/, 5_publish/). Let the flow dictate the stages, not the other way around.</p>
+
+
+
+
+<p><strong>When to add domain folders:</strong> A stage holding 15+ notebooks becomes hard to scan. At that point, group by domain, source system, or business area <em>inside</em> the stage folder (e.g., <code>2_validate/notebooks/finance/</code>, <code>2_validate/notebooks/marketing/</code>). Avoid adding layers earlier, they just bring noise.</p>
+
+
+
+
+<h2 class="wp-block-heading">Quick Anti-Patterns (What to Avoid)</h2>
+
+
+
+
+<p> <table style="border-collapse: collapse;width: 100%">
+<thead>
+<tr>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Smell</th>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Why It Hurts</th>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px">50 items flat at root</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">No process order; scanning takes minutes instead of seconds</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Move stage-specific items into numbered folders</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><code>final_final_transform.ipynb</code></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Version chaos; Git history tells the real story, not filenames</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Use Git branches/commits, keep one canonical name</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Mixed <code>CamelCase</code> + <code>snake_case</code></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Slows scanning; inconsistency forces mental translation</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Pick one style, enforce in code reviews</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Over-nested folders</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><code>1_ingest/sources/api/customers/raw/</code> is 5 layers deep for one file</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Stay flat until navigation pain forces a split</td>
+</tr>
+</tbody>
+</table> </p>
+
+
+
+
+<h2 class="wp-block-heading">What&#8217;s Next</h2>
+
+
+
+
+<p>Over the coming months, we&#8217;ll be sharing more articles in this series, covering different aspects of building on Microsoft Fabric. If you have requests for specific topics or feedback on this setup, feel free to reach out or share your ideas, your input is welcome!</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Microsoft Fabric Workspace Setup for Multi‑Developer Teams</title>
+      <link>https://xebia.com/blog/microsoft-fabric-workspace-setup-for-multi-developer-teams/</link>
+      <guid>https://xebia.com/?p=126342</guid>
+      <pubDate>Sun, 07 Dec 2025 23:00:00 +0000</pubDate>
+      <dc:creator>Rik Adegeest</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Microsoft Fabric Workspace Setup for Multi‑Developer Teams</h1>
+  <p></p>
+</div>
+
+<article>
+  <h2 class="wp-block-heading">About This Series</h2>
+
+
+
+
+<p>Microsoft Fabric makes it easy to get started with a single workspace and a single developer. As soon as you add a team, you run into messier questions: who works where, how to keep branches and workspaces in sync, and how to give everyone usable data without cloning the lakehouse repeatedly.</p>
+
+
+
+
+<p>In <a href="https://xebia.com/blog/fabric-workspace-structure-that-scales/">part 1</a> we stayed inside a single workspace and focused on internal structure and naming. In this post we zoom out one level: how to set up <strong>multiple workspaces and Git branches</strong> so several developers can work in parallel <em>without</em> constantly rebuilding their own lakehouse.</p>
+
+
+
+ **Series outline:**
+1. **Internal workspace setup &amp; naming** (this post)
+2. **Project workspace setup (multi-developer scaling)** (this post)
+3. Deployments &amp; Git integration
+4. Data validation &amp; logging
+5. Automated workspace provisioning
+6. Cluster sizing heuristics
+
+
+
+
+<h2 class="wp-block-heading">The Problem: Multi‑Developer Chaos on Fabric</h2>
+
+
+
+
+<p>The happy path demo usually shows a single developer in a single workspace. Real projects don’t look like that. In real life:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>You have <strong>multiple people</strong> working on the same Fabric solution.</li>
+<li>Many of them prefer to work in the <strong>Fabric UI</strong>, not only in VS Code.</li>
+<li>You want <strong>Git integration</strong> for version control and deployments.</li>
+<li>Fabric’s Git integration uses a <strong>1 workspace = 1 branch</strong> model.</li>
+</ul>
+
+
+
+
+<p>That last point is where it gets interesting:</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>A workspace can be linked to one Git branch at a time. You can change which branch it points at, but it is always a one-to-one relationship.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>This immediately raises a question:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>How do you let people work on different features <strong>at the same time</strong>,</li>
+<li>While still using the <strong>UI</strong>,</li>
+<li>And <strong>not</strong> stepping on each other’s toes?</li>
+</ul>
+
+
+
+
+<p>On top of that, you quickly run into a second problem: <strong>data</strong>.</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Workspaces are not Git-synced.</li>
+<li>Notebook and pipeline definitions are Git-synced.</li>
+<li>Lakehouse and warehouse <strong>metadata</strong> is Git-synced, <strong>data is not</strong>.</li>
+</ul>
+
+
+
+
+<p>So even if you solve the workspace/branch story, you can end up with feature workspaces that are technically “ready” but have <strong>no useful data</strong> attached.</p>
+
+
+
+
+<p>This post focuses on the setup that makes both collaboration and data access workable.</p>
+
+
+
+
+<h2 class="wp-block-heading">Quick Recap: What Git Does (and Doesn’t) Sync</h2>
+
+
+
+
+<p>We only need a light mental model here:</p>
+
+
+
+
+<p> <table style="border-collapse: collapse;width: 100%">
+<thead>
+<tr>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Item type</th>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Git synced?</th>
+<th style="border: 1px solid #ccc;padding: 6px 8px;text-align: left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Workspace</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">No</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Just a container. Binding to a branch is a setting, not in Git.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Lakehouse / Warehouse</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Partially</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Item + schema/metadata synced. <strong>Data is not</strong> in Git. Each workspace can have its own instance of a lakehouse item, but only some of them will actually contain data.</td>
+</tr>
+<tr>
+<td style="border: 1px solid #ccc;padding: 6px 8px"><strong>Notebook / Pipeline / Dataflow</strong></td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Yes</td>
+<td style="border: 1px solid #ccc;padding: 6px 8px">Definitions stored as artifacts in Git.</td>
+</tr>
+</tbody>
+</table> </p>
+
+
+
+
+<p>The key consequence:</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>A brand-new feature workspace linked to a branch will pull down notebooks, pipelines, semantic models and the empty shell of your lakehouse, but it won’t magically have a full copy of your lakehouse data.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>When we talk about “rebuilding” or <strong>rehydrating</strong> a lakehouse in this context, we mean the full sequence of steps required to turn that empty shell into something useful for development again: rerunning ingestion pipelines, recreating tables, copying or restoring data, and sometimes fixing permissions and configurations.</p>
+
+
+
+
+<p>If each developer treated “their” lakehouse as the primary data source, someone would still have to <strong>rehydrate</strong> that lakehouse: rerun ingestion, copy data, or do some manual import. That gets old very quickly.</p>
+
+
+
+
+<p>Let’s first look at the workspace options teams typically consider.</p>
+
+
+
+
+<h2 class="wp-block-heading">Option 1: Everyone in the Same Dev Workspace and Branch</h2>
+
+
+
+
+<p>The most obvious setup:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>One Dev workspace.</li>
+<li>One branch (often <code>main</code> or <code>develop</code>).</li>
+<li>All developers work in that workspace, on that branch.</li>
+</ul>
+
+
+
+
+<p>On paper:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>There’s only one place to find things.</li>
+<li>Nobody has to think about which workspace to open.</li>
+<li>Git integration “just” points to this one branch.</li>
+</ul>
+
+
+
+
+<p>In practice you quickly hit issues:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Interference</strong> – People overwrite each other’s changes because they’re working on the same items.</li>
+<li><strong>Half-baked features</strong> – It’s hard to keep partially finished work out of the next deployment.</li>
+<li><strong>No clean isolation</strong> – You cannot easily test a feature end-to-end without worrying about what someone else is doing right now.</li>
+<li><strong>Git noise</strong> – Small “fix” commits from different features all land on the same branch and are hard to untangle in a PR.</li>
+</ul>
+
+
+
+
+<p>When can this still be acceptable (but still not recommended)?</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Teams of 1.</strong></li>
+<li>
+<strong>Teams of 2</strong>, who:
+    <ul>
+<li>work on the same feature at the same time,</li>
+<li>and are very disciplined about coordination.</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<p>For almost everyone else, this becomes a bottleneck faster than you’d like to admit.</p>
+
+
+
+
+<h2 class="wp-block-heading">Option 2: Central Dev/Test/Prod + Personal Feature Workspaces</h2>
+
+
+
+
+<p>Microsoft’s recommended direction looks like <a href="https://learn.microsoft.com/en-us/fabric/cicd/git-integration/manage-branches?tabs=azure-devops" rel="noopener">this</a>.</p>
+
+
+
+
+<p><img decoding="async" alt="microsoft" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2025/12/microsoft-fabric-workspace-setup-for-multi-developer-teams-branches-update-commit.png" title="microsoft"></p>
+
+
+
+
+<ul class="wp-block-list">
+<li>
+<strong>A set of central workspaces:</strong>
+<ul>
+<li><code>project1-dev</code></li>
+<li><code>project1-test</code></li>
+<li><code>project1-prod</code></li>
+</ul>
+</li>
+<li>
+<strong>A set of personal workspaces, one per active developer:</strong>
+<ul>
+<li><code>project1-dev-rik</code></li>
+<li><code>project1-dev-sara</code></li>
+<li><code>project1-dev-joost</code></li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<p>Together with a more classic Git branching model:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><code>workspace-dev</code> is linked to the <strong><code>main</code></strong> branch.</li>
+<li>Each personal workspace is linked to a <strong>feature branch</strong>.</li>
+</ul>
+
+
+
+
+<p>Conceptually this setup ticks a lot of boxes:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Isolated areas per developer.</li>
+<li>Clean Git history and PRs.</li>
+<li>Central Dev/Test/Prod for shared environments.</li>
+</ul>
+
+
+
+
+<p>But if you implement it naïvely, you hit the rehydration problem mentioned earlier.</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>Brand-new personal workspace + feature branch = code definitions and an empty lakehouse shell, but no useful data by default.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<h2 class="wp-block-heading">Principle: Only Central Workspaces Are Populated With Data</h2>
+
+
+
+
+<p>Here is the key idea that removes the “rehydrate lakehouse” pain while still giving everyone a lakehouse item in their workspace:</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>Lakehouses are synced to every workspace through Git, but only the central workspace is populated with real data. Feature workspaces have the same lakehouse definitions, but those stay mostly empty and are not the primary data source.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>What this looks like:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Central Dev workspace:</strong>
+<ul>
+<li>Owns the main lakehouse with <strong>actual development data</strong>.</li>
+<li>Owns the pipelines that ingest into that lakehouse.</li>
+</ul>
+</li>
+<li><strong>Personal feature workspaces:</strong>
+<ul>
+<li>Receive the <strong>same lakehouse artifacts</strong> through Git sync.</li>
+<li>Do <strong>not</strong> run full ingestion into their local copies.</li>
+<li>Notebooks and pipelines in these workspaces <strong>connect to the central Dev lakehouse</strong> for reading and writing, instead of relying on the local, mostly empty instance.</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<p>This is the bit that feels counterintuitive in Fabric’s UI:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>The default pattern is “attach notebook to a lakehouse in the same workspace”.</li>
+<li>Here, your notebook in <code>workspace-dev-rik</code> will intentionally work with the lakehouse that lives in <code>workspace-dev</code>.</li>
+</ul>
+
+
+
+
+<p>Why this is worth it:</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>When a developer creates a new feature workspace, links it to a branch and syncs, they can immediately run notebooks against real development data. No extra ingestion, no manual copy, no custom rehydration step.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>You’ve separated two concerns:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Where data actually lives and is curated</strong> → in stable, central workspaces.</li>
+<li><strong>Where code is edited and branched</strong> → in flexible, branch-bound personal workspaces that just carry the lakehouse definitions.</li>
+</ul>
+
+
+
+
+<h3 class="wp-block-heading">Day-in-the-Life: Developer Flow</h3>
+
+
+
+
+<p>From a developer’s point of view, a typical feature looks like this:</p>
+
+
+
+
+<ol class="wp-block-list">
+<li>
+<strong>Create a feature branch from <code>main</code></strong><br />
+    Example: <code>feature/calculated-customer-metrics</code>.
+  </li>
+<li>
+<strong>Bind your personal workspace to the branch</strong><br />
+    Link <code>workspace-dev-rik</code> to <code>feature/calculated-customer-metrics</code> and sync.
+  </li>
+<li>
+<strong>Connect notebooks/pipelines to the central lakehouse</strong>
+<ul>
+<li>Attach to <code>lh_project</code> in <code>workspace-dev</code> (or another central development workspace).</li>
+<li>Optionally, write intermediate data to a dedicated schema or folder for your feature.</li>
+</ul>
+</li>
+<li>
+<strong>Develop and test</strong>
+<ul>
+<li>Add or update notebooks and pipelines.</li>
+<li>Run them against shared development data without rehydrating anything in your own workspace.</li>
+</ul>
+</li>
+<li>
+<strong>Push and open a pull request</strong>
+<ul>
+<li>Commit your changes.</li>
+<li>Open a PR into <code>main</code>.</li>
+<li>Let automated checks + code review do their work.</li>
+</ul>
+</li>
+<li>
+<strong>Merge and sync Dev</strong>
+<ul>
+<li>Merge the PR.</li>
+<li>Sync <code>workspace-dev</code> with <code>main</code>.</li>
+<li>From there, promote to Test/Prod via your chosen deployment flow.</li>
+</ul>
+</li>
+</ol>
+
+
+
+
+<p>At no point did you:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Copy the entire lakehouse into each personal workspace, or</li>
+<li>Ask every developer to run a full ingestion job just to get started.</li>
+</ul>
+
+
+
+
+<h2 class="wp-block-heading">Cross‑Workspace Access: Great Power, Sharp Edges</h2>
+
+
+
+
+<p>Fabric lets you mix and match workspaces quite a bit:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Pipelines can trigger other pipelines in another workspace.</li>
+<li>Notebooks can read/write data in a lakehouse that is not in the same workspace.</li>
+</ul>
+
+
+
+
+<p>This is what enables patterns like:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Separation between <strong>ingestion workspaces</strong> and <strong>transformation workspaces</strong>.</li>
+<li>Feature workspaces that read and write data in a <strong>shared development lakehouse</strong>.</li>
+<li>A central “orchestration” workspace that coordinates jobs across domains.</li>
+</ul>
+
+
+
+
+<p>So far, so good. The sharp edge only appears when <strong>Git and deletes</strong> enter the picture.</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>Right now, Git sync can fail if a commit deletes an item in one workspace while that same item is still referenced from another workspace. When Dev tries to sync to that commit, Fabric detects that applying the delete would break those cross‑workspace references and refuses the sync.</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>A very common way this shows up is with feature workspaces setup.</p>
+
+
+
+
+<h3 class="wp-block-heading">Example: deleting a pipeline in a feature workspace</h3>
+
+
+
+
+<p>Imagine you have:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>A central Dev workspace bound to <code>main</code>.</li>
+<li>Two feature workspaces, each bound to its own branch.</li>
+<li>A shared pipeline called <code>pl_ingest_customers</code>, synced to all of them from Git.</li>
+<li>In one of the feature workspaces, another pipeline or dataflow still calls <code>pl_ingest_customers</code>.</li>
+</ul>
+
+
+
+
+<p>Now you decide that <code>pl_ingest_customers</code> is no longer needed for your feature:</p>
+
+
+
+
+<ol class="wp-block-list">
+<li>You <strong>delete</strong> <code>pl_ingest_customers</code> in your feature workspace.</li>
+<li>You commit and open a PR, merging that delete into <code>main</code>.</li>
+<li>You sync the Dev workspace to the new <code>main</code>.</li>
+</ol>
+
+
+
+
+<p>From Git’s point of view, the commit says: “<code>pl_ingest_customers</code> is gone.”<br /> But in the <strong>other</strong> feature workspace, there’s still a pipeline or dataflow that references <code>pl_ingest_customers</code>.</p>
+
+
+
+
+<p>When Dev tries to sync:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>Fabric sees that applying the delete would break that other reference.</li>
+<li>It refuses the sync and surfaces an error.</li>
+</ul>
+
+
+
+
+<p>From your perspective this feels like:</p>
+
+
+
+<div class="wp-block-xebia-content-section">
+<div>
+  <p>I just cleaned up a pipeline in my feature workspace, why can’t Dev sync anymore?</p>
+  <p></p>
+  <p></p>
+</div>
+</div>
+
+
+
+<p>From Fabric’s perspective, it’s preventing you from breaking another workspace that relies on the same repository.</p>
+
+
+
+
+<h3 class="wp-block-heading">What to do with this in practice</h3>
+
+
+
+
+<p>This safety net is useful, but it does mean you have to be deliberate about where you create dependencies between items.</p>
+
+
+
+
+<p>Rules of thumb:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Keep most item dependencies inside a single workspace</strong><br />
+  If a pipeline or dataflow calls another pipeline, prefer to keep that relationship within one workspace instead of spreading it over several.</li>
+<li><strong>Prefer data-based integration across workspaces</strong><br />
+  Reading and writing tables or files in a <strong>shared lakehouse</strong> is much less likely to cause Git delete conflicts than chaining pipelines or datasets across workspaces.</li>
+</ul>
+
+
+
+
+<h3 class="wp-block-heading">How this fits the centralized lakehouse pattern</h3>
+
+
+
+
+<p>For the centralized lakehouse setup in this post, that boils down to:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li>It’s fine that <strong>all workspaces depend on the central lakehouse</strong><br />
+  You don’t plan to delete that lakehouse; it’s the shared backbone of your solution.</li>
+<li>Be much more cautious with <strong>shared pipelines, dataflows and notebooks</strong><br />
+  Either:
+    <ul>
+<li>keep those dependencies entirely inside one central workspace, or</li>
+<li>manage them carefully and coordinate deletions.</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+<p>By keeping almost all item‑to‑item dependencies local to a workspace, and only centralising the lakehouse itself, you greatly reduce the chance that a small clean‑up in one feature branch ends up blocking Git sync for everyone else.</p>
+
+
+
+
+<h2 class="wp-block-heading">Do’s and Don’ts for Workspace Scaling</h2>
+
+
+
+
+<p>To make this concrete, here’s a quick list you can turn into team conventions.</p>
+
+
+
+
+<h3 class="wp-block-heading">Do’s</h3>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Do use centralized workspaces to own populated lakehouses</strong><br />
+  Dev, Test, and Prod lakehouses with real data live in a small number of stable workspaces.</li>
+<li><strong>Do let lakehouse definitions sync to feature workspaces via Git</strong><br />
+  This keeps schemas and table structures aligned without copying the full data.</li>
+<li><strong>Do give each active developer a personal workspace</strong><br />
+  Linked to their feature branch; this keeps features isolated.</li>
+<li><strong>Do standardize the developer workflow</strong><br />
+  “Branch → bind workspace → develop → PR → merge → sync Dev” should be documented and boring.</li>
+<li><strong>Do be explicit about cross-workspace access</strong><br />
+  Decide which workspaces can use items in other workspaces and under what conditions.</li>
+</ul>
+
+
+
+
+<h3 class="wp-block-heading">Don’ts</h3>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Don’t put all developers in a single Dev workspace and branch by default</strong><br />
+  It may look simple but almost always breaks down beyond a very small team.</li>
+<li><strong>Don’t fully populate the lakehouse in every feature workspace</strong><br />
+  That just multiplies ingestion effort and increases the risk of data drift.</li>
+<li><strong>Don’t hide rehydration steps in tribal knowledge</strong><br />
+  If any workspace needs data copy or backfill, automate it and surface it as a clear, repeatable step.</li>
+</ul>
+
+
+
+
+<h2 class="wp-block-heading">Summary</h2>
+
+
+
+
+<p>With an internal structure (part 1) and a multi-developer workspace setup (this post), you have a skeleton that scales both in depth (more artifacts) and width (more developers).</p>
+
+
+
+
+<p>If you’re experimenting with your own workspace topology and run into sharp edges, especially around cross-workspace dependencies and Git sync, I’d love to hear your experiences—they’re exactly the kind of real-world feedback this series is built on.</p>
+
+
+
+ In the next posts in this series we’ll look at:
+
+&#8211; How to **connect these workspaces to Git and CI/CD** in a predictable way.
+&#8211; Patterns for **data validation and logging** that survive multiple environments.
+&#8211; **Automating workspace provisioning**, so new developers and new projects can get started without manual clicking.
+&#8211; Some practical **cluster sizing heuristics** that have worked well in the wild.
+
+If you’re experimenting with your own workspace topology and run into sharp edges, especially around cross-workspace dependencies and Git sync, I’d love to hear your experiences—they’re exactly the kind of real-world feedback this series is built on.</article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

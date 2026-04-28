@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Structuring Your dbt Project for AI-Powered Development</title>
+      <link>https://xebia.com/blog/structuring-your-dbt-project-for-ai-powered-development/</link>
+      <guid>https://xebia.com/?p=151246</guid>
+      <pubDate>Fri, 03 Apr 2026 10:01:00 +0000</pubDate>
+      <dc:creator>Pádraic Slattery</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Structuring Your dbt Project for AI-Powered Development</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>AI coding assistants are transforming how we write and maintain software. In the analytics engineering space, <a href="https://www.getdbt.com" rel="noopener">dbt</a> projects are particularly well-suited to AI development; they are convention-heavy, SQL-centric, and rich with repetitive tasks like writing tests, documenting columns and enforcing naming standards. But simply dropping an AI agent into your dbt project will not yield great results. To get real value, you need to structure your repository so that AI agents can work effectively within it.</p>
+
+
+<p>This post walks through how to structure a dbt project for AI-powered development, drawing from the <a href="https://github.com/pgoslatara/dbt-ai" rel="noopener">pgoslatara/dbt-ai</a> GitHub repository built for my presentation at the <a href="https://www.meetup.com/nl-nl/amsterdam-dbt-meetup/events/313554612/" rel="noopener">NL dbt Meetup: 15th Edition</a>. The ideas and processes described here can be replicated using many tools — the demo uses GitHub, GCP and <a href="https://docs.anthropic.com/en/docs/claude-code/overview" rel="noopener">Claude Code</a> because they are free, have generous free tiers and/or are widely used. You can replicate similar setups with many other tools such as Azure DevOps, Gemini, Cortex, Snowflake, etc.</p>
+
+
+<h2 class="wp-block-heading">A north star for AI in dbt</h2>
+
+
+<p>Before diving into the how, it is worth establishing the why. The goal is straightforward:</p>
+
+
+<p style="font-size: 1.25em;font-style: italic;border-left: 4px solid #6B21A8;padding-left: 1em;margin: 1.5em 0">&#8220;We should aim for a world where AI handles the repetitive, rule-based work so humans can focus on business logic and architecture.&#8221;</p>
+
+
+<p>In a dbt project, repetitive and rule-based work includes naming conventions, test coverage, documentation, SQL formatting, PR review checklists and much more. Business logic — how to model a fact table, when to use an <a href="https://docs.getdbt.com/docs/build/incremental-models" rel="noopener">incremental materialisation</a>, what business questions the marts should answer — benefits hugely from human judgement. AI is increasingly powerful and there are a growing number of integrations available, but <a href="https://arxiv.org/abs/2311.10054" rel="noopener">best practices are not very mature yet</a>. The structure described below is designed to maximise an AI agent&#8217;s effectiveness on rule-based tasks.</p>
+
+
+<h2 class="wp-block-heading">Getting started</h2>
+
+
+<p>Here is the high-level directory layout of a dbt project structured for AI-powered development, with the AI-specific components highlighted:</p>
+
+
+<pre><code>.
+├── .claude/
+│   ├── commands/            # Slash commands for interactive development
+│   ├── settings.local.json  # Hooks and permission configuration
+│   └── skills/              # Multi-step analytical protocols
+├── .github/workflows/       # CI/CD and agentic workflows
+├── .mcp.json                # MCP server configuration
+├── models/
+│   ├── staging/
+│   ├── intermediate/
+│   └── marts/
+├── CLAUDE.md                # AI project instructions
+├── dbt-bouncer.yml          # Convention enforcement rules
+├── dbt_project.yml
+└── pyproject.toml
+</code></pre>
+
+
+<p>The standard dbt structure (<code>models/</code>, <code>dbt_project.yml</code>, <code>profiles.yml</code>) remains unchanged. The AI components sit alongside it, adding capabilities without altering how dbt itself operates. Let&#8217;s look at each component.</p>
+
+
+<p align="center"> <img decoding="async" alt="Diagram showing how AI components layer on top of a standard dbt project structure" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/02/ai-integration-layers.jpg" width="80%" title="dbt"> </p>
+
+
+<p>You do not need to implement everything at once. Here is a practical path to adopting AI-powered development in your dbt project:</p>
+
+
+<ol class="wp-block-list">
+
+<li><strong>Start with <code>CLAUDE.md</code></strong>: Document your conventions. This is the highest-leverage action as it benefits both AI and human developers. Your existing <code>README.md</code> or Confluence documentation is a great starting point.</li>
+
+
+<li><strong>Add the dbt MCP server</strong>: The <a href="https://github.com/dbt-labs/dbt-mcp" rel="noopener">dbt MCP server</a> gives AI agents the ability to compile, build and test your project directly. Installation is a single configuration file.</li>
+
+
+<li><strong>Pick one agentic workflow</strong>: The AI PR Review workflow is a good first choice — it provides immediate value on every pull request and requires minimal setup beyond a <a href="https://docs.anthropic.com/en/docs/claude-code/github-actions" rel="noopener">Claude Code OAuth token</a>.</li>
+
+
+<li><strong>Add skills and commands incrementally</strong>: As you notice repetitive patterns in your development workflow, encode them as skills or slash commands.</li>
+
+
+<li><strong>Enforce with hooks</strong>: Once your conventions are documented, add hooks to enforce them automatically during AI-assisted development.</li>
+
+</ol>
+
+
+<p>The below sections walk you through these options.</p>
+
+
+<h3 class="wp-block-heading">1. CLAUDE.md: Teaching AI your conventions</h3>
+
+
+<p>The foundation of AI-powered dbt development is a <a href="https://docs.anthropic.com/en/docs/claude-code/memory#claudemd" rel="noopener"><code>CLAUDE.md</code></a> file at the root of your repository. This file contains project-specific instructions that Claude reads before performing any work. Think of it as onboarding documentation for your AI pair programmer, similar in spirit to the conventions you might enforce with tools like <a href="https://xebia.com/blog/maintaining-conventions-in-dbt-projects-with-dbt-bouncer/">dbt-bouncer</a>, but written in natural language for Claude.</p>
+
+
+<p>A good <code>CLAUDE.md</code> for a dbt project covers:</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>Naming conventions</strong>
+<p>Define the naming patterns for each layer of your project, following <a href="https://docs.getdbt.com/best-practices/how-we-structure/2-staging#staging-files-and-folders" rel="noopener">dbt&#8217;s recommendations</a>. Be explicit about prefixes, separators and entity names.</p>
+</li>
+
+
+<li>
+<strong>SQL style</strong>
+<p>Document your SQL formatting preferences: keyword casing, CTE patterns, join alias conventions and column-per-line rules.</p>
+</li>
+
+
+<li>
+<strong>Materialisation rules</strong>
+<p>Specify which materialisation each layer should use and when to choose incremental models.</p>
+</li>
+
+
+<li>
+<strong>Testing and documentation requirements</strong>
+<p>State your minimum test coverage expectations, which test packages you use (e.g. <a href="https://github.com/calogica/dbt-expectations" rel="noopener">dbt_expectations</a>) and the documentation standards for models and columns.</p>
+</li>
+
+
+<li>
+<strong>Development commands</strong>
+<p>List the commands a developer (human or Claude) should use to lint, format and build the project.</p>
+</li>
+
+</ul>
+
+
+<p>Here is an excerpt from the demo project&#8217;s <code>CLAUDE.md</code>:</p>
+
+
+<pre><code>## Naming Conventions
+- Staging models: `stg_&lt;source&gt;__&lt;entity&gt;.sql`
+- Intermediate models: `int_&lt;entity&gt;.sql`
+- Dimension tables: `dim_&lt;entity&gt;.sql`
+- Fact tables: `fct_&lt;entity&gt;.sql`
+- Source YAML: `_&lt;source&gt;__sources.yml`
+- Model YAML: `_&lt;layer&gt;__models.yml` or `_&lt;source&gt;__models.yml`
+## SQL Style
+- Lowercase for column and table names using `snake_case`
+- One column per line in `select` statements
+- Always alias tables in joins
+- Use CTEs over nested subqueries
+- CTE pattern: `source` → `renamed` → `select` for staging models
+</code></pre>
+
+
+<p>The key insight is that these instructions do not just help Claude write better code, they encode the same conventions your human developers follow, creating a single source of truth for how the project should be maintained. And the best part, Claude loads them every time it is invoked, resulting in every developer having access to all these benefits all of the time!</p>
+
+
+<h3 class="wp-block-heading">2. The dbt MCP server: Giving Claude access to dbt</h3>
+
+
+<p>A <code>CLAUDE.md</code> file tells Claude what to do, but it still needs the ability to interact with dbt directly. <a href="https://modelcontextprotocol.io/" rel="noopener">Model Context Protocol (MCP)</a> enables this by allowing AI agents to use external tools. The <a href="https://github.com/dbt-labs/dbt-mcp" rel="noopener">dbt MCP server</a> from <a href="https://www.getdbt.com/" rel="noopener">dbt Labs</a> gives the agent access to dbt CLI commands, model metadata, lineage and the semantic layer.</p>
+
+
+<p>Configuration is a single JSON file (<code>.mcp.json</code>) at the root of your repository:</p>
+
+
+<pre><code>{
+  "mcpServers": {
+    "dbt": {
+      "command": "uvx",
+      "args": ["dbt-mcp"],
+      "env": {
+        "DBT_PATH": ".venv/bin/dbt",
+        "DBT_PROJECT_DIR": "."
+      }
+    }
+  }
+}
+</code></pre>
+
+
+<p>No need to run a long-running, always-on process in the background. Just a single JSON file.</p>
+
+
+<p>With this configured, Claude can compile models, run tests and inspect the project manifest without shelling out to <code>dbt</code> manually. This is particularly powerful when combined with slash commands, allowing Claude to compile the project, read the <code>manifest.json</code> and validate changes against the real schema, vastly reducing hallucinated table or column references while at the same time reducing token usage and overall runtime.</p>
+
+
+<h3 class="wp-block-heading">3. Skills and slash commands: Interactive development</h3>
+
+
+<p>Beyond the foundational <code>CLAUDE.md</code> and MCP server, you can give Claude reusable capabilities for common development tasks. Community plugins like <a href="https://github.com/dbt-labs/dbt-agent-skills" rel="noopener">dbt-agent-skills</a> from dbt Labs provide a great starting point (I highly recommend the <a href="https://github.com/dbt-labs/dbt-agent-skills/tree/main/skills/dbt/skills/using-dbt-for-analytics-engineering" rel="noopener">using-dbt-for-analytics-engineering</a> skill), and you can build your own project-specific capabilities in two forms:</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong><a href="https://docs.anthropic.com/en/docs/claude-code/skills" rel="noopener">Skills</a></strong>
+<p>Multi-step analytical protocols stored in <code>.claude/skills/</code>. These encode <em>how Claude thinks</em> about a class of problem and are triggered naturally via conversation or via a slash command. They are ideal for tasks that require analysis and judgement, not just code generation.</p>
+</li>
+
+
+<li>
+<strong><a href="https://docs.anthropic.com/en/docs/claude-code/slash-commands" rel="noopener">Slash commands</a></strong>
+<p>User-initiated shortcuts stored in <code>.claude/commands/</code>. These follow a predictable, templated output pattern and are ideal for tasks that generate or modify artifacts. They are invoked explicitly by the developer from within the Claude terminal via <code>/name-of-slash-command</code>.</p>
+</li>
+
+</ul>
+
+
+<p>The <code>dbt-ai</code> <a href="https://github.com/pgoslatara/dbt-ai" rel="noopener">demo project</a> includes example skills and slash commands. Here are some examples:</p>
+
+<table>
+<thead>
+<tr>
+<th>Skills</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dbt-explain-model</code></td>
+<td>Explain a model&#8217;s purpose, lineage, transformations and data quality</td>
+</tr>
+<tr>
+<td><code>dbt-impact-analysis</code></td>
+<td>Analyse downstream dependencies and risk-assess a model change</td>
+</tr>
+<tr>
+<td><code>dbt-review-sql</code></td>
+<td>Review SQL for BigQuery performance anti-patterns</td>
+</tr>
+<tr>
+<td><code>dbt-suggest-tests</code></td>
+<td>Suggest missing tests for a model</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Slash commands</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/add-tests &lt;model&gt;</code></td>
+<td>Add comprehensive tests to a model</td>
+</tr>
+<tr>
+<td><code>/document-model &lt;model&gt;</code></td>
+<td>Add YAML descriptions for all columns</td>
+</tr>
+<tr>
+<td><code>/generate-staging-model &lt;source.table&gt;</code></td>
+<td>Generate a staging model from a source table</td>
+</tr>
+<tr>
+<td><code>/generate-unit-tests &lt;model&gt;</code></td>
+<td>Generate <a href="https://docs.getdbt.com/docs/build/unit-tests" rel="noopener">dbt unit tests</a> for computed columns</td>
+</tr>
+<tr>
+<td><code>/generate-verified-model &lt;model&gt;</code></td>
+<td>Generate a manifest-validated model from a description</td>
+</tr>
+</tbody>
+</table>
+
+<p>Here is an example skill that explains a dbt model:</p>
+
+
+<pre><code># dbt-explain-model
+Explain the dbt model `$ARGUMENTS` in plain English.
+1. Read the model's SQL file and understand its transformations.
+2. Read the model's YAML file for descriptions and tests.
+3. Identify upstream dependencies by finding `ref()` and `source()` calls.
+4. Identify downstream dependents by searching for `ref('$ARGUMENTS')`.
+5. Produce a summary covering:
+   - **Purpose**: What this model does and its business value.
+   - **Lineage**: What feeds into it and what consumes it.
+   - **Key transformations**: Computed columns, joins, aggregations.
+   - **Data quality**: What tests protect this model.
+   - **Materialisation**: How it's materialised and why.
+</code></pre>
+
+
+<p>And here is the <code>/generate-staging-model</code> slash command:</p>
+
+
+<pre><code>Generate a staging model for the source `$ARGUMENTS`.
+1. Look up the source table schema in BigQuery or the source YAML.
+2. Create the staging SQL file following the CTE pattern:
+   - `source` CTE: `SELECT * FROM {{ source('&lt;source_name&gt;', '&lt;table_name&gt;') }}`
+   - `renamed` CTE: rename columns to snake_case, cast types, add `city` column
+   - Final `SELECT * FROM renamed`
+3. Create or update the source and model YAML files with descriptions and tests.
+4. Place files in `models/staging/&lt;source_name&gt;/`.
+5. Follow all naming conventions from CLAUDE.md.
+</code></pre>
+
+
+<p>The pattern of &#8220;skill to analyse, command to apply&#8221; allows developers to review recommendations before committing to changes. For example, <code>/suggest-tests fct_trips</code> analyses the model and recommends missing tests, while <code>/add-tests fct_trips</code> applies the tests directly.</p>
+
+
+<h3 class="wp-block-heading">4. Hooks: Keeping AI output consistent</h3>
+
+
+<p>Even with clear instructions, Claude can produce SQL that does not match your formatting standards. <a href="https://docs.anthropic.com/en/docs/claude-code/hooks" rel="noopener">Hooks</a> solve this by running automated checks after every file write or edit. In the demo project, a <code>PostToolUse</code> hook checks SQL formatting after every write:</p>
+
+
+<pre><code>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_FILE_PATHS\" | grep -q '\\.sql$'; then uv run sqlfmt --check $CLAUDE_FILE_PATHS 2&gt;/dev/null || echo 'sqlfmt: formatting issues detected'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+
+
+<p>This ensures that every SQL file Claude writes or modifies is checked against <a href="https://sqlfmt.com/" rel="noopener">sqlfmt</a> formatting rules, providing immediate feedback to the agent on the changes it has made. You can add multiple hooks, examples include formatting YAML files, playing a sound once a task is complete or even adding a notification to your laptop&#8217;s status bar once Claude has completed a task. Hooks are also fantastic for increasing the security of your Claude setup, for <a href="https://github.com/henryklunaris/claude-code-security?trk=public_post_comment-text" rel="noopener">example</a> by preventing force pushes on your git history and from reading credentials in your <code>.env</code> file.</p>
+
+
+<h3 class="wp-block-heading">5. Agentic workflows: AI in your CI/CD pipeline</h3>
+
+
+<p>The components above cover a developer working with Claude locally. But Claude can also run autonomously in your CI/CD pipeline via the <a href="https://github.com/anthropics/claude-code-action" rel="noopener">Claude Code GitHub Action</a>. The demo project implements several <a href="https://docs.anthropic.com/en/docs/claude-code/github-actions" rel="noopener">agentic workflows</a> that run without human intervention.</p>
+
+
+<h4 class="wp-block-heading">On pull request</h4>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>AI PR Review</strong>
+<p>Every pull request is reviewed by Claude as a senior dbt/analytics engineer. The review checks SQL style, naming conventions, test coverage, documentation completeness, etc. Findings are posted as a PR comment with severity levels: <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f534.png" alt="🔴" class="wp-smiley" style="height: 1em; max-height: 1em;" /> Issue for bugs, <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f7e1.png" alt="🟡" class="wp-smiley" style="height: 1em; max-height: 1em;" /> Suggestion for improvements, and <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/2705.png" alt="✅" class="wp-smiley" style="height: 1em; max-height: 1em;" /> All clear to confirm each category was checked.</p>
+</li>
+
+
+<li>
+<strong>Fix CI Failure</strong>
+<p>When the CI pipeline fails, Claude fetches the failed job logs, identifies the root cause (naming the specific step, model or test) and posts a PR comment with a concrete fix suggestion and the local commands to verify it, helping to speed up the developer&#8217;s workflow.</p>
+</li>
+
+</ul>
+
+
+<p>Here is a simplified excerpt from the <a href="https://github.com/pgoslatara/dbt-ai/blob/main/.github/workflows/ai_pr_review.yml" rel="noopener">AI PR Review workflow</a>:</p>
+
+
+<pre><code>- name: Analyze PR
+  uses: anthropics/claude-code-action@v1
+  with:
+    claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+    model: claude-opus-4-6
+    prompt: |-
+      You are a senior dbt/analytics engineer reviewing a PR.
+      Check for:
+      1. SQL Style: snake_case names, one column per line, CTEs over subqueries
+      2. Naming: stg_, int_, dim_, fct_ prefixes
+      3. Tests: not_null/unique on primary keys, relationships
+      4. Documentation: model and column descriptions
+      5. Performance: full table scans, missing incremental strategies
+      6. Business Logic: verify computed columns are correct
+      7. Materialisations: views for staging/intermediate, tables for marts
+</code></pre>
+
+
+<p>A key benefit is that the Claude instance running in the GitHub Workflow has access to the same <code>CLAUDE.md</code> file, slash commands, skills and hooks that are in your repo. So all the improvements you make to these files for your local development workflow also benefit your automated CI reviews.</p>
+
+
+<p style="font-size: 1.25em;font-style: italic;border-left: 4px solid #6B21A8;padding-left: 1em;margin: 1.5em 0">&#8220;Every improvement you make for your local AI workflow also improves your automated CI reviews.&#8221;</p>
+
+
+<p align="center"> <img decoding="async" alt="Screenshot of an AI PR review comment on a GitHub pull request" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/02/ai-pr-review.png" width="80%" title="dbt"> </p>
+
+
+<h4 class="wp-block-heading">On production failure</h4>
+
+
+<p>When a <a href="https://cloud.google.com/run" rel="noopener">Cloud Run</a> job fails, a <code>repository_dispatch</code> webhook triggers an agentic workflow. Claude fetches the execution details and logs from <a href="https://cloud.google.com/logging" rel="noopener">Cloud Logging</a>, determines the root cause, and either creates a fix PR with the necessary code changes or opens a GitHub issue (<a href="https://github.com/pgoslatara/dbt-ai/issues/45" rel="noopener">example</a>) if the failure is an infrastructure problem rather than a code defect.</p>
+
+
+<p align="center"> <img decoding="async" alt="Screenshot of an auto-generated fix PR created by the Cloud Run failure workflow" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/02/fix-cloud-run.png" width="80%" title="dbt"> </p>
+
+
+<p>This is particularly useful for dbt projects where pipelines run overnight. Upon starting their workday a developer will already have an issue or pull request to review that relates to the overnight failure, reducing the time-to-resolution and removing the burden of finding relevant logs from the developer.</p>
+
+
+<p>Security is in important factor with a workflow such as this. Giving Claude access to GCP services via the <a href="https://docs.cloud.google.com/sdk/gcloud" rel="noopener">gcloud CLI</a> and a read-only service account ensure it can access relevant information without potential to make breaking changes. Similarly, setting up <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches" rel="noopener">branch protection</a> prevents Claude from merging directly to <code>main</code> and ensures that all merged code was reviewed by a human.</p>
+
+
+<h4 class="wp-block-heading">Scheduled maintenance</h4>
+
+
+<p>Three weekly workflows run every Monday:</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>Abandoned Models Detection</strong>
+<p>Compares the dbt manifest against actual BigQuery datasets to find orphaned tables no longer defined in the project, generating cleanup SQL in a GitHub issue.</p>
+</li>
+
+
+<li>
+<strong>Codebase Review</strong>
+<p>Claude analyses the entire codebase for dbt best practice violations — undocumented models, naming convention breaches, incorrect materialisations, missing <a href="https://docs.getdbt.com/docs/collaborate/govern/model-contracts" rel="noopener">contracts</a> on marts — and creates a categorised GitHub issue. This is particularly useful in dbt projects with many developers as there is greater potential for non-best practice code to be merged.</p>
+</li>
+
+
+<li>
+<strong>Data Quality Monitoring</strong>
+<p>Queries production BigQuery data for statistical anomalies such as volume spikes, duration outliers and data freshness issues, creating a GitHub issue with AI-analysed findings. Of interest especially for dbt projects that suffer from low quality source data that requires frequent analysis to ensure it still matches expectations.</p>
+</li>
+
+</ul>
+
+
+<h2 class="wp-block-heading">Conclusion</h2>
+
+
+<p>AI will not replace analytics engineers, but analytics engineers who use AI effectively will outpace those who do not. Setting up your dbt project for AI-powered development is not a one-time effort, given the rapid rate of improvements in this area it is an ongoing process of encoding conventions, adding capabilities and refining workflows. As a result, some of what is presented in this post will likely be out of date within six months as the tooling evolves.</p>
+
+
+<p>The approach described here — <code>CLAUDE.md</code> for conventions, MCP for tooling, skills and commands for interactive development, and agentic workflows for automation — provides a practical framework for embedding AI into every stage of your dbt lifecycle. Start small, iterate and keep humans focused on what they do best: understanding the business and making architectural decisions.</p>
+
+
+<p>The full demo repository is available at <a href="https://github.com/pgoslatara/dbt-ai" rel="noopener">github.com/pgoslatara/dbt-ai</a>.</p>
+
+
+<hr class="wp-block-heading" />
+
+
+<p>Looking to integrate AI into your dbt workflows? Our analytics engineer consultants are here to help — just contact us and we&#8217;ll get back to you soon. Or are you an analytics engineer interested in learning more? Check out our <a href="https://academy.xebia.com/training/">training courses</a> or have a look at our <a href="https://xebiacareers.recruitee.com/?jobs-c88dea0d%5Bcountry%5D%5B%5D=NL&amp;jobs-c88dea0d%5Btab%5D=Data%20%26%20AI" rel="noopener">job openings</a>.</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

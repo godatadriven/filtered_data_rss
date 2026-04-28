@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Introducing XBI Advisor; Start auto-consulting your BI environment.</title>
+      <link>https://xebia.com/blog/introduction-xbi-advisor/</link>
+      <guid>https://xebia.com/?p=130579</guid>
+      <pubDate>Thu, 15 Jan 2026 09:00:00 +0000</pubDate>
+      <dc:creator>Ruben Huidekoper</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Introducing XBI Advisor: Start auto-consulting your BI environment.</h1>
+  <p>Find out what your organization needs from your BI environment</p>
+</div>
+
+<article>
+  <p><strong>Looking to get started?</strong> Immediately want to check XBI Advisor out? You can access XBI Advisor <strong><a href="https://xebiaacademy.typeform.com/to/Cz5qhQMm" rel="noopener">here!</a></strong></p>
+
+
+
+<h2 class="wp-block-heading">Introducing XBI Advisor</h2>
+
+
+
+<p><em>Let’s face it:</em> choosing a BI tool can be hard. Because, where to even start? How to ensure your choice is not only cost-effective, but also continues to make sense as your organization scales and its needs change over the years?&nbsp;</p>
+
+
+
+<p>And unfortunately, it doesn’t end once a tool is selected. After implementation, friction tends to build quietly. Workspaces emerge without clear ownership, performance drops, metrics are defined differently across reports, and maintaining the environment starts to take more effort than expected. What was once a well-intended BI setup slowly turns into something that is harder to govern and reliably gain value from. Eventually, organizations may feel they are not getting the full value out of the tools they already invested in.&nbsp;</p>
+
+
+
+<p>Therefore, it remains all the more important to thoroughly approach the selection and organization of BI tooling.&nbsp; After all, the set-up of BI tooling influences how effective teams can respond to changing demands and, perhaps most importantly, how confidently stakeholders make decisions. Yet the conversation is sometimes reduced to feature checklists, or vendor preferences without sufficiently exploring the underlying pains and desired outcomes.&nbsp;</p>
+
+
+
+<p>At Xebia Data, we have set out to address exactly this in an exhaustive, yet compact way. </p>
+
+
+
+<p><strong>Meet our XBI Advisor</strong>, a tool that helps you navigate the landscape when selecting (new) BI tooling and guides you towards insight into how you can optimize your current set-up for practical use. Thus, it aids you in understanding what the best fit is for you; not by asking <em>“Which tool is best?”</em>, but by first asking <em>“What matters most to you, and why?”</em></p>
+
+
+<div>
+  <p>The XBI Advisor captures a slice of our own consulting knowledge and expertise</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>Any critical conclusions and decision logic are driven by our own handpicked rules, carefully selected based on our experience with implementing and governing BI environments.&nbsp;</p>
+
+
+
+<p>This highlights what sets XBI Advisor apart: All of its recommendations, scores, and strategic guidance resonate directly with our team&#8217;s real-world experience with BI implementations, migrations, technical as well as adoption and organizational challenges we have solved for our clients. Thus, we ensure XBI Advisor delivers added value.</p>
+
+
+
+<h2 class="wp-block-heading">Our Method</h2>
+
+
+
+<p>So how does this actually work?</p>
+
+
+
+<p>The XBI Advisor is built on two core components:</p>
+
+
+
+<ol class="wp-block-list">
+<li><strong>A proprietary rules-based scoring engine</strong>, grounded entirely in our consulting expertise  </li>
+
+
+
+<li><strong>A Large Language Model</strong> that communicates insights clearly and personally, without making decisions itself or generating generic advice</li>
+</ol>
+
+
+
+<p>Furthermore, we use a Typeform questionnaire to gather input on your context and current situation. Its questions are carefully selected based on years of client engagements and technical implementations. These engagements have helped us understand what matters most: common pain points like unclear data ownership, inconsistent metrics across teams, performance issues at scale, inadequate access controls, and governance that doesn&#8217;t match your organization’s aspirations. </p>
+
+
+
+<p>As a result, XBI Advisor does not ask surface-level questions and instead probes the paramount items determining whether a BI setup succeeds or struggles, ranging from infrastructure to team capability.</p>
+
+
+
+<p>Subsequently, the responses from the Typeform feed into a scoring system that evaluates capability across five dimensions: </p>
+
+
+
+<ul class="wp-block-list">
+<li>Ecosystem fit</li>
+
+
+
+<li>Security capabilities</li>
+
+
+
+<li>Data governance</li>
+
+
+
+<li>Team maturity alignment</li>
+
+
+
+<li>Feature capabilities</li>
+</ul>
+
+
+
+<p>Currently, XBI Advisor supports this comparison for <strong>Power BI</strong>, <strong>Tableau</strong> and <strong>Looker</strong>.&nbsp;</p>
+
+
+<div>
+  <p>A newly developed proprietary rules engine drives scoring</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>Each answer then triggers specific rules we&#8217;ve defined: Using GCP with BigQuery? Looker gets ecosystem points for its native integration. Team prefers code-based development with version control? The rules account for that, considering it affects long-term adoption and maintenance.&nbsp;</p>
+
+
+
+<p>Now here&#8217;s where the LLM adds value. It takes those deterministic scores and your complete response profile and turns them into something readable and relevant. Specifically, it identifies patterns and explains why the scores landed where they did. Ultimately, it synthesizes our strategic recommendations into coherent advice that fits your context.&nbsp;</p>
+
+
+
+<p>Thus, the XBI Advisor enables us to do something powerful for you: deliver the kind of analysis our consultants provide in engagements, but at scale. Through our rules engine , extended by LLM adaptability, we offer rigorous evaluation methods based on human critical disposition and experience, easily accessible.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading">The Output</h2>
+
+
+
+<p>So let’s talk more about what the exact output looks like. After completing the questionnaire, you will receive an email with a personalized report in your email inbox. Each report begins with a visual summary of key takeaways and recommendations, giving you the headline insights immediately</p>
+
+
+
+<p>We then dive into your current landscape, examining your existing setup and specific challenges, linking your responses to strategic advice regarding your governance frameworks, data architecture, pipeline automation, and access management.&nbsp;</p>
+
+
+
+<p>Next, we explore how the three leading BI tools—Power BI, Tableau, and Looker—align with your specific setup. The rules engine uses your input to assign points across our five categories of ecosystem fit, security capabilities, data governance, team maturity alignment, and feature capabilities. We present the scoring alongside qualitative analysis of each tool&#8217;s pros and cons in your specific context.&nbsp;</p>
+
+
+
+<p><img decoding="async" alt="autogui" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/01/introduction-xbi-advisor-scoring.png" title="autogui"></p>
+
+
+
+<p>The recommendation concludes with practical next steps: specific Xebia consulting services that address your identified challenges (from scalability to AI implementation) and relevant training offerings from our academy. There&#8217;s also a complete cost analysis comparing all three tools, giving you the financial picture alongside the strategic one.</p>
+
+
+<div>
+  <p>XBI Advisor offers practical advice and suggested steps</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>This is how our comprehensive approach ensures that by the end of the report, you don&#8217;t just know which tool scored highest; you understand why, what needs to happen before implementation, and how to move forward successfully.</p>
+
+
+
+<h2 class="wp-block-heading">Conclusion</h2>
+
+
+
+<p>The right BI setup can transform how your organization works with data. The wrong one? It becomes a source of frustration, inefficiency, and missed opportunities. The XBI Advisor helps you avoid that outcome by bringing expert analysis to your specific context. No guesswork, no generic advice.&nbsp;</p>
+
+
+
+<p>Curious what your personalized assessment looks like? <strong><a href="https://xebiaacademy.typeform.com/to/Cz5qhQMm" rel="noopener">Try the XBI Advisor now</a></strong> and see where your organization stands, or reach out to our team at Xebia Data if you&#8217;d like to discuss your BI strategy in more detail.</p>
+
+
+
+<p>Thanks for reading! Do feel free to reach out to us <strong><a href="mailto:ruben.huidekoper@xebia.com,camila.birocchi@xebia.com,valerie.habbel@xebia.com?subject=XBI%20Advisor%20Inquiry">here</a></strong> for any questions or suggestions. Looking forward to hearing from you!</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

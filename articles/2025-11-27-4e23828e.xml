@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Patient-First: the Future of AI in Healthcare</title>
+      <link>https://xebia.com/blog/human-centered-future-ai-healthcare-trends-use-cases-predictions/</link>
+      <guid>https://xebia.com/?p=125032</guid>
+      <pubDate>Thu, 27 Nov 2025 08:09:53 +0000</pubDate>
+      <dc:creator>Giovanni Lanzani</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Patient-First: the Future of AI in Healthcare</h1>
+  <p><strong>How does AI solve healthcare&#8217;s most pressing problems?</strong></p>
+</div>
+
+<article>
+  <p>It’s&nbsp;been millennia since humankind realized that,&nbsp;if you&nbsp;follow the advice of&nbsp;medicine,&nbsp;you can live a better&nbsp;and longer&nbsp;life (that, and&nbsp;avoiding&nbsp;carbs, apparently).&nbsp;The craft has been perfected ever since, and each major technological advancement has contributed to furthering this craft.&nbsp;</p>
+
+
+
+<p>AI is the latest advancement, and to see its impact, I flew <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/2708.png" alt="✈" class="wp-smiley" style="height: 1em; max-height: 1em;" /> to Lisbon for the AWS GenAI for Healthcare Summit!&nbsp;</p>
+
+
+
+<p>My takeaway is that<strong> AI will augment doctors, i</strong>nstead of replacing them, and remove inefficiencies in the backend. Carbs will have to be skipped manually, though.</p>
+
+
+
+<h2 class="wp-block-heading">The &#8220;Human-Out-of-the-Loop&#8221;&nbsp;Application<em>&nbsp;</em></h2>
+
+
+
+<p>Approaching&nbsp;AI as a partner rather than a replacement was a major&nbsp;talking&nbsp;point. </p>
+
+
+
+<p>This brings&nbsp;us to the first major trend&nbsp;in&nbsp;GenAI&nbsp;healthcare,&nbsp;the “human-out-of-the-loop&#8221;&nbsp;application.&nbsp;&nbsp;</p>
+
+
+
+<p>Unlike direct diagnosis systems,&nbsp;these applications operate in the background, optimizing the healthcare infrastructure. They offer efficiency gains scaled across hospitals,&nbsp;without adding to the&nbsp;workload of&nbsp;doctors and nurses.&nbsp;</p>
+
+
+
+<p>Some highlights:&nbsp;</p>
+
+
+
+<ol class="wp-block-list">
+<li><strong>Enhancing&nbsp;medical&nbsp;imaging:</strong>&nbsp;Algorithms adjust X-ray imaging to&nbsp;compensate for missing data, low resolution, or poor contrast. This enhances the data radiologists examine, directly&nbsp;impacting&nbsp;diagnostic accuracy.&nbsp;</li>
+
+
+
+<li><strong>Enhancing&nbsp;data&nbsp;storage:</strong> Large hospitals pay millions per year for storage solutions. During the day, they presented algorithms that discard up to 70% of the space required to store image data, while reconstructing it perfectly when needed. Direct impact <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f4b0.png" alt="💰" class="wp-smiley" style="height: 1em; max-height: 1em;" /></li>
+
+
+
+<li><strong>Reducing&nbsp;invasive&nbsp;examinations:</strong>&nbsp;A non-trivial percentage of cancers is linked to radiation exposure from CT scans. Lower-radiation scans are less precise, making diagnosis tricky. <a href="https://www.therapanacea.eu" rel="noopener">TheraPanacea</a> trained a variational autoencoder on 250,000 CT scans to generate high-quality images from lower-radiation/quality scans. The demo was impressive.&nbsp;</li>
+</ol></article>
+
+
+<div>
+  <h1>The Human-in-the-Loop Lifeline</h1>
+  <h1></h1>
+  <p>A Moving Application</p>
+  <p></p>
+  <p></p>
+  <p></p>
+</div>
+
+<article>
+  <h2 class="wp-block-heading">Building&nbsp;Trust&nbsp;Through&nbsp;Specialization<em>&nbsp;</em></h2>
+
+
+
+<p>Another recurring theme was&nbsp;<strong>trust</strong>. To adopt AI, clinicians must believe in its outputs. To do so requires moving beyond general-purpose large language models (LLMs) towards customized versions for medical subdomains.&nbsp;</p>
+
+
+
+<p>Why is this&nbsp;specialization&nbsp;a non-negotiable?&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li><strong>Medical&nbsp;accuracy and&nbsp;clinical&nbsp;relevance:</strong>&nbsp;A model trained on generic data is rife with wrong medical advice and irrelevant information. A model trained on academic work and clinical data provides better answers.</li>
+
+
+
+<li><strong>Evidence-based&nbsp;practice:</strong>&nbsp;Medicine runs on evidence. Specialized&nbsp;AI must access and quote reputable sources, allowing professionals to verify its output.</li>
+
+
+
+<li><strong>Contextual&nbsp;understanding and&nbsp;didactic&nbsp;communication:</strong>&nbsp;Generic AI&nbsp;models might be&nbsp;too straightforward, meandering,&nbsp;or&nbsp;miss&nbsp;the nuances of a clinical scenario. Specialized&nbsp;models prioritize clinical information and a didactic, educational tone mirroring how health professionals communicate.</li>
+</ul>
+
+
+
+<p>Accuracy, relevance, evidence, context, and communication:&nbsp;essential&nbsp;building blocks of trust. From&nbsp;there,&nbsp;adoption (and&nbsp;impact)&nbsp;will follow.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading">Agents Tomorrow, Pragmatism&nbsp;Today<em>&nbsp;</em></h2>
+
+
+
+<p>The AWS GenAI summit&nbsp;was&nbsp;not about agentic systems,&nbsp;but targeted tools solving actual problems:</p>
+
+
+
+<ul class="wp-block-list">
+<li>Either creating silent, scalable efficiencies within healthcare systems, or</li>
+
+
+
+<li>Designing human-centric solutions, enhancing diagnostic.</li>
+</ul>
+
+
+
+<p>The future of AI in healthcare&nbsp;is then&nbsp;about&nbsp;leveraging&nbsp;human-out-of-the-loop AI for backend gains while creating human-in-the-loop systems, empowering professionals&nbsp;to&nbsp;do more and reach&nbsp;more people.&nbsp;</p>
+
+
+
+<p>To achieve this, specialized models are key to earning trust and making an impact to, ultimately, put the patient where they belong: at the center.</p>
+
+
+
+<p>Want to learn how Xebia is co-creating real-world AI solutions with healthcare organizations? Findout about<strong> </strong><a href="https://xebia.com/artificial-intelligence/ai-in-healthcare/" data-type="page" data-id="106379"><strong>AI in Healthcare Challenges and Solutions</strong>.</a></p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

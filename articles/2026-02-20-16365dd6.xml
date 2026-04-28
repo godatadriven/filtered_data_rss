@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Kickstart Your Analytics Engineering Career</title>
+      <link>https://xebia.com/blog/learning-analytics-engineering-skills-for-free/</link>
+      <guid>https://xebia.com/?p=125707</guid>
+      <pubDate>Fri, 20 Feb 2026 10:00:00 +0000</pubDate>
+      <dc:creator>Pádraic Slattery</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Kickstart Your Analytics Engineering Career</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>Are you looking to break into the exciting world of <a href="https://xebia.com/blog/analytics-engineer-the-new-buzzword/">analytics engineering</a> or transition your career to leverage powerful data insights? This journey can seem daunting, with a myriad of tools and technologies to master. However, with the right approach you can build a robust skillset and a compelling portfolio with freely available resources.</p>
+
+
+<p>This guide will walk you through setting up a modern data transformation pipeline, using publicly available datasets and open-source tools, providing you with an opportunity to develop and demonstrate your skills.</p>
+
+
+<h2 class="wp-block-heading">Modern Data Transformations: Your Essential Toolkit</h2>
+
+
+<p>Before we dive into the project, let&#8217;s briefly look at the core components of the data transformation pipeline we&#8217;ll be building. The beauty of this pipeline is its accessibility; many components offer free tiers or open-source versions perfect for learning.</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>Data Warehouse: Google BigQuery</strong>
+<p>A highly scalable, serverless, and cost-effective cloud data warehouse. We&#8217;ll leverage its <a href="https://docs.cloud.google.com/bigquery/public-data" rel="noopener">public datasets</a>, which are free to query up to a <a href="https://docs.cloud.google.com/free/docs/free-cloud-features#bigquery" rel="noopener">certain limit</a>, making it ideal for learning.</p>
+</li>
+
+
+<li>
+<strong>Transformation: dbt (data build tool)</strong>
+<p><a href="https://www.getdbt.com/" rel="noopener">dbt</a> enables data analysts and engineers to transform data in their warehouse by simply writing SQL. It brings software engineering best practices like version control, testing, and documentation to the data transformation workflow.</p>
+</li>
+
+
+<li>
+<strong>Version Control: Git + GitHub</strong>
+<p>Essential for any collaborative or structured development, <a href="https://git-scm.com/" rel="noopener">Git</a> allows you to track changes in your code, while <a href="https://github.com/" rel="noopener">GitHub</a> provides a platform for hosting your repositories and collaborating with others.</p>
+</li>
+
+
+<li>
+<strong>CI/CD: GitHub Actions</strong>
+<p>Implement continuous integration and continuous delivery directly into your <a href="https://github.com/features/actions" rel="noopener">GitHub</a> repositories. This will be crucial for automating your dbt project&#8217;s testing and deployment.</p>
+</li>
+
+</ul>
+
+
+<h2 class="wp-block-heading">Your Learning Roadmap: Step-by-Step Implementation</h2>
+
+
+<p>Here&#8217;s a structured approach to building your modern data transformation pipeline:</p>
+
+
+<h3 class="wp-block-heading">0. Prerequisites</h3>
+
+
+<p>We assume that you are already familiar with the below topics, if not then best to focus on these areas before moving to the subsequent step.</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>SQL</strong>
+<p>SQL is fundamental for many job titles, including Analytics Engineers, as it the primary language used to query data stored in databases and also to transform that data. Familiarity with CTEs (common table expressions), JOINs and window functions is expected. If you are not familiar with these areas, you can sign up for online courses (DataCamp, Udemy, etc.) or attend one of Xebia&#8217;s <a href="https://academy.xebia.com/training/?q=sql&amp;sort=relevant&amp;disciplines=1679">SQL training courses</a>.</p>
+</li>
+
+
+<li>
+<strong>Version Control (git)</strong>
+<p>Version control is a system that records changes to a file or set of files over time so that you can recall specific versions later. For aspiring analytics engineers, understanding the basics of version control (most commonly Git) is fundamental as it enables collaborative development on SQL queries, dbt models, and Python scripts and more, allowing teams to track every modification, revert to previous states and merge contributions seamlessly. In modern data transformation pipelines, version control ensures data quality, reproducibility, auditability, and efficient teamwork. There are several commonly used version control tools including <a href="https://github.com/" rel="noopener">GitHub</a>, <a href="https://gitlab.com/" rel="noopener">GitLab</a> and <a href="https://azure.microsoft.com/en-us/products/devops" rel="noopener">Azure DevOps</a>.</p>
+</li>
+
+</ul>
+
+
+<h3 class="wp-block-heading">1. Setting Up Your Environment (BigQuery &amp; dbt Cloud)</h3>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>BigQuery</strong>
+<p>Create a <a href="https://console.cloud.google.com/" rel="noopener">Google Cloud account</a> (it&#8217;s free!). Create a new project and enable the BigQuery API. In the BigQuery UI, ensure you can see the <code>bigquery-public-data</code> project in the Explorer pane.</p>
+<p>In the &#8220;IAM and admin&#8221; &gt; &#8220;Service accounts&#8221; section, create a service account and a JSON key for this service account. Note that this key is sensitive so please store it safely!</p>
+</li>
+
+
+<li>
+<strong>GitHub</strong>
+<p>Create a <a href="https://github.com/signup" rel="noopener">GitHub account</a> (it&#8217;s free!). Create a repository, preferably public so others can see your skills. Note that it is possible to change the visibility of your repository between public and private as often as you like.</p>
+</li>
+
+
+<li>
+<strong>dbt Cloud</strong>
+<p>Create a <a href="https://www.getdbt.com/signup" rel="noopener">dbt Cloud account</a> (it&#8217;s free for individuals!). Create a new project selecting &#8220;BigQuery&#8221; as the warehouse and uploading the service account JSON file created earlier. Connect your GitHub repository to dbt Cloud by following this <a href="https://docs.getdbt.com/docs/cloud/git/import-a-project-by-git-url" rel="noopener">guide</a>. You should be able to run <code>dbt debug</code> successfully from the Studio in dbt Cloud.</p>
+</li>
+
+</ul>
+
+
+<h3 class="wp-block-heading">2. Structuring Your Data Transformations (dbt Best Practices)</h3>
+
+
+<ul class="wp-block-list">
+
+<li>
+<p><strong>Model Organisation</strong></p>
+<p>Using the <code>bigquery-public-data</code> BigQuery project, select tables to use as <a href="https://docs.getdbt.com/docs/build/sources" rel="noopener">sources</a>. Here are some interesting options:</p>
+<p></p>
+<p style="text-indent:30px">1. <code>crypto_bitcoin.transactions</code>: A large, constantly updating table containing Bitcoin transactions. This source gives you the opportunity to create an incremental model.</p> <p></p>
+<p style="text-indent:30px">2. <code>github_repos.commits</code>: Analyse the commit activity in a GitHub repo(s) of your choice.</p> <p></p>
+<p style="text-indent:30px">3. <code>wikipedia.pageviews_2025</code>: Take a look at what Wikipedia articles were trending.</p> <p>Structure your dbt project with <code>staging</code>, <code>intermediate</code>, and <code>marts</code> layers according the dbt&#8217;s <a href="https://docs.getdbt.com/best-practices/how-we-structure/1-guide-overview" rel="noopener">recommendations</a>.</p> <p></p><p></p><p></p>
+</li>
+
+
+<li>
+<strong>Materialisations</strong>
+<p>Configure your <code>dbt_project.yml</code>, carefully considering which <a href="https://docs.getdbt.com/docs/build/materializations" rel="noopener">materialisation</a> (e.g., table, view, incremental) makes the most sense for each layer of your models by taking into account factors like transformation complexity, storage costs and data update frequency.</p>
+</li>
+
+
+<li>
+<strong>Tests</strong>
+<p>Add both singular and generic <a href="https://docs.getdbt.com/docs/build/data-tests" rel="noopener">tests</a> to ensure your <code>marts</code> layer contains high quality data.</p>
+</li>
+
+
+<li>
+<strong>Exposures</strong>
+<p>Explore adding dbt <a href="https://docs.getdbt.com/docs/build/exposures" rel="noopener">exposures</a> to define downstream consumption of your dbt models, particularly for your BI reports.</p>
+</li>
+
+</ul>
+
+
+<h3 class="wp-block-heading">3. Version Control &amp; CI/CD with GitHub &amp; GitHub Actions</h3>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>Development Workflow</strong>
+<p>Make use of version control <a href="https://docs.getdbt.com/blog/git-branching-strategies-with-dbt" rel="noopener">best practices</a> by creating feature branches and pull requests. Ensure your commits contain related work and a clear <a href="https://docs.getdbt.com/docs/cloud/git/version-control-basics#git-overview" rel="noopener">commit message</a>.</p>
+</li>
+
+
+<li>
+<strong>Continuous Integration (CI)</strong>
+<p>Add a <a href="https://docs.getdbt.com/docs/deploy/ci-jobs" rel="noopener">CI job</a> and configure &#8220;slim CI&#8221;. This will automate testing of your changes on every pull request, ensuring data quality and preventing breaking changes.</p>
+</li>
+
+
+<li>
+<strong>Branch Protection</strong>
+<p>Add a <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/managing-a-branch-protection-rule" rel="noopener">branch protection</a> rule to your <code>main</code> branch so that pull requests cannot be merged unless the CI job succeeds.</p>
+</li>
+
+</ul>
+
+
+<h3 class="wp-block-heading">4. Visualising Your Insights (BI Tools)</h3>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>Dashboards</strong>
+<p>With your data transformed and validated by dbt, the next step is to connect your chosen BI tool (e.g. <a href="https://public.tableau.com/app/discover" rel="noopener">Tableau Public</a>, Power BI Desktop – many offer free versions or trials) to your dbt-generated <code>marts</code> tables. Building dashboards demonstrates that the data available in your <code>marts</code> layer can answer business questions.</p>
+</li>
+
+</ul>
+
+
+<h2 class="wp-block-heading">Bonus Points</h2>
+
+
+<p>Want to really show off! Here are some additional options you can pursue:</p>
+
+
+<ul class="wp-block-list">
+
+<li>
+<strong>dbt Core</strong>
+<p>As an alternative to dbt Cloud you can use <a href="https://github.com/dbt-labs/dbt-core" rel="noopener">dbt Core</a>, the open-source version of dbt. This <a href="https://docs.getdbt.com/guides/manual-install?step=" rel="noopener">guide</a> provides a quickstart. This allows you to demonstrate your knowledge of setting up a python virtual environment and comfort working with a command line interface (CLI). <a href="https://code.visualstudio.com/download" rel="noopener">VSCode</a> is a great integrated development environment (IDE) to help you get started.</p>
+</li>
+
+
+<li>
+<strong>CI/CD</strong>
+<p>Using GitHub Actions it is possible to create your own CI workflow that compiles and runs your dbt project. In addition, you can create a continuous delivery (CD) workflow that publishes <a href="https://docs.getdbt.com/reference/commands/cmd-docs" rel="noopener">dbt Docs</a> as a <a href="https://docs.github.com/en-us/pages" rel="noopener">GitHub Page</a>.</p>
+</li>
+
+
+<li>
+<strong>Formatter</strong>
+<p>Use a SQL formatter on your code to ensure a standardised approach to formatting. <a href="https://www.sqlfluff.com/" rel="noopener">SQLFluff</a> and <a href="https://sqlfmt.com/" rel="noopener">sqlfmt</a> are two widely used options.</p>
+</li>
+
+
+<li>
+<strong>Dev Container and Docker</strong>
+<p>Is your background in other areas of engineering, do you have <a href="https://www.docker.com/" rel="noopener">Docker</a> knowledge? One way to demonstrate this is by using dbt Core with a <a href="https://containers.dev/" rel="noopener">dev container</a>, a complete development environment that includes all the essential packages, tools, dependencies, and configurations needed to develop with dbt.</p>
+</li>
+
+
+<li>
+<strong>Orchestration</strong>
+<p>Orchestration refers to the regular running of your dbt project so the underlying dbt models contain up to date data. Generally this is performed using dbt Cloud or a tool like Airflow or Dagster. You can also use <a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onschedule" rel="noopener">GitHub Actions</a> to schedule your dbt project. When designing your orchestration, keep in mind topics like how you will handle retries, will alerts be sent upon failures and what logs are outputted so you can debug what actions the pipeline performed.</p>
+</li>
+
+
+<li>
+<strong>Add to your CV</strong>
+<p>Already have a dbt repo you are proud of?! Don&#8217;t forget to include a link on your CV so recruiters and hiring managers can take a look!</p>
+</li>
+
+
+<li>
+<p><strong>Books</strong></p>
+<p>For those interested in upskilling on other aspects of Analytics Engineering, there are many books available such as:</p>
+<p></p>
+<p style="text-indent:30px">1. <a href="https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/" target="_blank" rel="noopener">Designing Data-Intensive Applications</a>: A resource for understanding and building data-intensive applications, covering data modeling, storage systems, and distributed systems.</p> <p></p>
+<p style="text-indent:30px">2. <a href="https://www.packtpub.com/en-gb/product/fundamentals-of-analytics-engineering-9781837636457?srsltid=AfmBOorZ3-H2KF5YmR0kadMm51xwLgeCjkiryZ38LkVTEsYWvO0v81ik" target="_blank" rel="noopener">Fundamentals of Analytics Engineering</a>: This book guides you through designing and implementing data pipelines, data modeling, schema design, data quality, governance, observability, collaborative coding practices (Git), and automating workflows with CI/CD pipelines and orchestrators.</p> <p></p>
+<p style="text-indent:30px">3. <a href="https://www.kimballgroup.com/data-warehouse-business-intelligence-resources/books/data-warehouse-dw-toolkit/" target="_blank" rel="noopener">The Data Warehouse Toolkit</a>: The classic guide to data modeling in data warehouses, focused on the Kimball dimensional modeling methodology.</p>
+</li>
+
+
+<li>
+<p><strong>Community</strong></p>
+<p>Inspiration for learnings can also come from others. There are a number of communities where can you ask questions, get inspired or see the work of others:</p>
+<p></p>
+<p style="text-indent:30px">1. <a href="https://www.getdbt.com/community/join-the-community" target="_blank" rel="noopener">dbt Slack</a>: A Slack workspace for all questions related to dbt, frequented by over 20k users.</p> <p></p>
+<p style="text-indent:30px">2. <a href="https://www.reddit.com/r/dataengineering/" target="_blank" rel="noopener">r/dataengineering</a>: For more technical questions, the data engineering subreddit is an active space for questions as well as project showcases.</p> <p></p>
+<p style="text-indent:30px">3. Newsletters: There are a number of newsletters/blogs that are worth signing up for such as <a href="https://dataproducts.substack.com/" target="_blank" rel="noopener">Data Products</a> from Chad Sanderson, <a href="https://roundup.getdbt.com/" target="_blank" rel="noopener">The Analytics Engineering Roundup</a> from dbt Labs and Benn Stancil&#8217;s <a href="https://benn.substack.com/" target="_blank" rel="noopener">Substack</a>.</p> <p></p>
+</li>
+
+</ul>
+
+
+<h2 class="wp-block-heading">Conclusion</h2>
+
+
+<p>Embarking on a career in analytics engineering doesn&#8217;t require expensive courses or proprietary software. By leveraging powerful open-source tools and publicly available datasets, you can build a modern data transformation pipeline. This hands-on project using BigQuery, dbt and GitHub will not only equip you with practical skills but also provide a tangible portfolio piece to showcase your abilities to prospective employers.</p>
+
+
+<p>Start building, keep learning, and don&#8217;t be afraid to experiment. The world of data awaits!</p>
+
+
+<hr class="wp-block-heading" />
+
+
+<p>Feel you could benefit from more personalised advice? Our analytics engineer consultants are here to help – just contact us and we&#8217;ll get back to you soon. Or are you a future analytics engineer interested in learning more? Check out our <a href="https://academy.xebia.com/training/">training courses</a> or have a look at our <a href="https://xebiacareers.recruitee.com/?jobs-c88dea0d%5Bcountry%5D%5B%5D=NL&amp;jobs-c88dea0d%5Btab%5D=Data%20%26%20AI" rel="noopener">job openings</a>.</p>
+
+ Photo by [RDNE Stock project](https://www.pexels.com/photo/grayscale-photo-of-road-closed-3907990/).</article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

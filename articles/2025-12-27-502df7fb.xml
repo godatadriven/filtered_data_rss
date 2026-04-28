@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>How to Reap the Benefits of LLM-Powered Coding Assistants, While Avoiding Their Pitfalls</title>
+      <link>https://xebia.com/blog/how-reap-benefits-llm-powered-coding-assistants-avoiding-pitfalls/</link>
+      <guid>https://xebia.com/?p=127255</guid>
+      <pubDate>Sat, 27 Dec 2025 10:06:16 +0000</pubDate>
+      <dc:creator>Giovanni Lanzani</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>LLM-powered coding mass-produces technical debt</h1>
+  <p>LLM-powered coding is powerful, but not everyone is benefiting.</p>
+</div>
+
+<article>
+  <p>The expectations around LLM-powered coding assistants are sky-high, but many organizations are falling behind because of them.</p>
+
+
+
+<p>WHY IT MATTERS? CTOs lament slowdowns and production issues traced to company-wide rollouts of <a href="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2025/12/Benefits-of-LLM-Powered-Coding-Assistants-Xebia.png" data-type="attachment" data-id="127446" rel="noopener">LLM-powered coding assistants</a>. The AI promise clashes with the reality of technical debt and security issues.</p>
+
+
+
+<p>HOW TO FIX IT? Deploy these tools strategically: available broadly when errors are cheap, but restricted when the stakes are high.</p>
+
+
+
+<h2 class="wp-block-heading">A Big Promise</h2>
+
+
+
+<p>The promise of AI for engineers is getting rid of engineers.</p>
+
+
+
+<p>Tools like <a href="https://xebia.com/partners/github/developer-productivity-with-github-copilot/" data-type="partners" data-id="25409">GitHub’s Copilot</a> write code, specs, review, and create pull requests. They create and run tests, and do so in the background while the developers engage in more productive activities, such as meetings.</p>
+
+
+
+
+
+<p>However, if this is all real, which companies are racing ahead?</p>
+
+
+
+<p>A <a href="https://getdx.com/whitepaper/ai-measurement-framework/" rel="noopener">survey</a> by <a href="https://getdx.com" data-type="link" data-id="https://getdx.com" rel="noopener">DX</a>, a developer intelligence platform asked 20.000 developers, finding the increase in productivity for staff engineers to be around 10%: not bad, but hardly revolutionary.</p>
+
+
+
+<p>I believe there&#8217;s another reason: the increase is unevenly distributed because these tools are like an ocean wave: fun for experienced surfers, but trouble for the neophytes.</p>
+
+
+
+<p><a href="https://en.wikipedia.org/wiki/Simon_Willison" rel="noopener">Simon Willison</a>—an independent AI researcher and member of the Python Software Foundation&#8217;s board—mentioned recently, in the <a href="https://www.lastweekinaws.com/podcast/screaming-in-the-cloud/ai-s-security-crisis-why-your-assistant-might-betray-you/" rel="noopener">Last Week in AWS</a> podcast, how LLM-assisted coding are a multiplier for his productivity, but only because he directs them with 20 years of experience.</p>
+
+
+
+<p>For example, when building a web application, he asks the model to check for <a href="https://en.wikipedia.org/wiki/Cross-site_request_forgery" rel="noopener">CSRF</a> (cross-site request forgery) vulnerabilities because he is aware of the threat. Someone with little to no web experience wouldn&#8217;t even ask. Guiding models (and vetting their output) separates success from (security) disasters, then.</p>
+
+
+
+<p>Willison prowess awaken jealousy. Some of his projects, co-written by LLMs, include tools for <a href="https://tools.simonwillison.net/ocr" rel="noopener">OCR-ing PDFs in the browser</a>,<a href="https://tools.simonwillison.net/annotated-presentations" rel="noopener"> creating annotated presentations</a>, <a href="https://tools.simonwillison.net/image-resize-quality" rel="noopener">image resizer</a>s, and a <a href="https://tools.simonwillison.net/social-media-cropper" rel="noopener">social media card cropper</a>, to name a few (you can find them all on his <a href="https://tools.simonwillison.net" rel="noopener">website</a>). This is the fulfilled promise of AI: an amplifier of expert skills.</p>
+
+
+
+<h2 class="wp-block-heading">The Other Side of the Coin</h2>
+
+
+
+<p>Less experienced developers awaken no jealousy when equipped with the same tools, and frightening tales abund.</p></article>
+
+
+<ul>
+  <li>
+  <p><em>What&#8217;s the point of me coding if at the end of the day i [sic] still gotta pay a dev to look at the code anyway? I&#8217;m sure it feels kinda good while I&#8217;m typing [&#8230;] but when stuff breaks it&#8217;s just dead weight.</em></p>
+  <p>
+    <a href="https://www.reddit.com/user/AssafMalkiIL/" rel="noopener">AssafMalkiIL</a> 
+          &#8211; https://xebia.ai/viiiibe-coding      </p>
+</li></ul>
+
+
+<article>
+  <p>And stuff does break. Claude can wipe everything valuable from your computer (including photos and documents) while executing an unrelated task.</p>
+
+
+
+<p>The boardroom agrees. In a recent <a href="https://www.finalroundai.com/blog/what-ctos-think-about-vibe-coding" rel="noopener">survey</a>, 90% of CTOs attributed production disasters to LLM-powered coding, and they&#8217;re not alone:</p>
+
+
+
+<ul class="wp-block-list">
+<li>The CEO of Sonar said downtime increased along with LLM-powered coding adoption.</li>
+
+
+
+<li>Veracode found that AI-generated code is functional but insecure half of the time.</li>
+
+
+
+<li>Naples University <a href="https://arxiv.org/pdf/2508.21634" rel="noopener">confirmed</a> AI output is riddled with subtle errors and security weaknesses.</li>
+</ul>
+
+
+
+<p>The core issue is failing to master the craft. Lack of steering or quality assurance allows LLM-powered coding assistants to increase technical debt with every prompt.</p></article>
+
+
+<div>
+  <h1>Process ain&#8217;t the answer</h1>
+  <h1></h1>
+  <p>Avoiding engineers&#8217; fatigue</p>
+  <p></p>
+  <p></p>
+  <p></p>
+</div>
+
+<article>
+  <h2 class="wp-block-heading">One-size fits none</h2>
+
+
+
+<p>Are success for some and disaster for others two sides of the same coin?</p>
+
+
+
+<p>Discussing with topic  with several CTOs and engineering managers, I came up with this model: if you fail to master the craft,  you end up adding technical debt with each new prompt.</p>
+
+
+
+<p>If engineers spot mistakes and weaknesses, LLM-powered coding assistants are an ally. For engineers who do not master their craft, these assistants spell trouble.</p>
+
+
+
+<p>This means these tools shouldn&#8217;t be available to everyone by default (unless for learning, they can be powerful with a mentor) to avoid adding technical debt quicker than what you can absorb.</p>
+
+
+
+<p>Doing so is easier said than done, as companies should understand who has the craft to use LLM-powered coding assistants effectively and who doesn&#8217;t.</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>

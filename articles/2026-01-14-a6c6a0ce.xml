@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Realist’s Guide to Hybrid Mesh Architecture (1): Single Source of Truth vs Democratisation</title>
+      <link>https://xebia.com/blog/realists-guide-to-hybrid-mesh-architecture-1-single-source-of-truth-vs-democratisation/</link>
+      <guid>https://xebia.com/?p=130305</guid>
+      <pubDate>Wed, 14 Jan 2026 17:08:33 +0000</pubDate>
+      <dc:creator>XiaoHan Li</dc:creator>
+      <description>Hybrid data mesh architecture practical implementation guide.</description>
+      <content:encoded><![CDATA[<div>
+  <h1><strong>Realist’s Guide to Hybrid Mesh Architecture (1): Single Source of Truth vs Democratisation</strong></h1>
+  <p></p>
+</div>
+
+<article>
+  <h2 class="wp-block-heading"><strong>Introduction</strong></h2>
+
+
+
+<p>At the crux of data mesh’s many practical issues is the inability to establish a single source of truth. In the book <em>Data Mesh</em>, Zhamak Dehghani calls the single source of truth a “myth” and “unachievable”, which I find an unfounded sophistry in defense of the apparent Achilles’ heel of her concept, and I vehemently disagree.</p>
+
+
+
+<p>Author of the book <em>Deciphering Data Architectures</em> James Serra called data mesh “a solution looking for a problem”. As a data mesh skeptic myself and a staunch custodian of the single source of truth, I nevertheless find it meaningful to learn from certain principles of the data mesh concept, to improve existing centralised architecture through hybrid mesh process, while maintaining a single truth.&nbsp;</p>
+
+
+
+<p>I further posit that data mesh and existing hybrid mesh implementations benefit primarily the data development process, yet overlook the purpose and how data is turned into value in real world business settings. This gap creates a multitude of practical complications and confusion during implementation. To this end, I propose an alternative hybrid mesh architecture design for business value.</p>
+
+
+<div>
+  <p>In this series of articles, I will:</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<ul class="wp-block-list">
+<li>Offer insights from adapting data mesh principles to democratise the data development process under centralised governance,&nbsp;</li>
+
+
+
+<li>Address the practical issues teams commonly encounter during hub-and-spoke implementation and lay out viable solutions,&nbsp;</li>
+
+
+
+<li>Propose a hybrid mesh constellation architecture which accommodates real-world data modelling needs, optimised for business value.&nbsp;</li>
+</ul>
+
+
+
+<p>The architecture discussed here adheres to the ELT process with data models implemented in dbt.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Data Mesh Concept &amp; Hybrid Mesh Adoption</strong></h2>
+
+
+
+<p>Six years after Dehghani proposed the data mesh concept as a solution for scaling, the idea of a pure data mesh remains highly hypothetical and unlikely to be productionised due to technological and organisational limitations.</p>
+
+
+
+<p>In recent years, a hybrid mesh pattern emerged within the industry to reap the benefits of democratised domain data development; while retaining some centralised elements to lower the adoption barrier.</p>
+
+
+
+<p>In a hybrid mesh architecture, each domain is empowered to develop their own data products, while all domains use the same technology stack, share the same common infrastructure, and all data live in the same central physical data lake, maintained by the central data team. (As opposed to pure data mesh which advocates domain control of different technology and infrastructure, as well as separate data lakes.)</p>
+
+
+
+
+
+<p><em>[Figure 1: Hub-and-Spoke]</em></p>
+
+
+
+<p></p>
+
+
+
+<p>A typical strategy for hybrid mesh is the hub-and-spoke pattern (Figure 1):&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li>A central data team lays down the common infrastructure, ingests source data, and prepares data in the staging layer.&nbsp;</li>
+
+
+
+<li>Multiple domain teams will then pick up the development of their transformations, create their own marts, at their own pace, using their knowledge of the domain, without the hassle of requesting and waiting on a central data team.</li>
+</ul>
+
+
+
+<h2 class="wp-block-heading"><strong>Single Source of Truth vs Democratisation</strong></h2>
+
+
+
+<p>A single source of truth is not only achievable, but also a must have, for turning data into business value. We’ve seen it time and again, when domains have uncoordinated autonomy, different teams start to report vastly different numbers for crucial metrics such as revenue, under different arbitrary versions of definitions for the same metric. Data practitioners can and have long been establishing a single source of truth, which is only feasible under centralised enforcement.&nbsp;</p>
+
+
+
+<p>Early hybrid mesh adopters accounted for the need for conformed dimensions, canonical entities, and aligned definition of metrics. Various industry peers converged to adopt the revised Hub-and-Spoke pattern with a shared integration layer maintained by the central hub team, where data is integrated, standardised, conformed, enriched, and eventually shared among domains to form the common building blocks which domain data marts rest upon. (Figure 2)</p>
+
+
+
+
+
+<p><em>[Figure 2: Adopted Hub-and-Spoke Pattern with a Shared Integration Layer]<br></em></p>
+
+
+
+<p>This commonly adopted hub-and-spoke pattern is designed with the following principles:</p>
+
+
+
+<ol class="wp-block-list">
+<li>A central data team lays down the common infrastructure, ingests source data, and prepares data in the staging layer.&nbsp;</li>
+
+
+
+<li>Data used by multiple domains are conformed and enriched in the shared integration layer, developed by the central data team.</li>
+
+
+
+<li>Domain-specific data are developed within each domain, based on the common data models provided from the integration layer (and sometimes directly from staging).</li>
+</ol>
+
+
+
+<h2 class="wp-block-heading"><strong>Common Problems in Hybrid Mesh Implementation</strong></h2>
+
+
+
+<p>The hub-and-spoke design sounds terrific on paper, until a couple months into implementation, and practical issues that the conceptual design did not account for begin to manifest themselves in front of domain developers.</p>
+
+
+<div>
+  <p>Common issues encountered in practice include:</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<ul class="wp-block-list">
+<li>Domains require the same logic, and each builds the same models in their own marts (sometimes with the same name), unaware of other domains’ activities.</li>
+
+
+
+<li>Domain B’s crucial model depends on certain logic from Domain A, which hasn’t been built yet. Domains have different priorities &amp; backlogs. Domain B opts to knowingly build A’s logic in Domain B so that they could finish the models they urgently need.</li>
+
+
+
+<li>Bi-directional dependencies between domains complicate orchestration. The required data refresh sequence among domains could be A-&gt;B-&gt;C for one use case, and C-&gt;A for another. Deployment jobs need to be scheduled at the detailed model level, chained between domains. Additional runs might be triggered and incur additional compute costs.</li>
+
+
+
+<li>Domains don’t always agree on data ownership. The placement decisions on data models often come with confusion and guesswork.</li>
+</ul>
+
+
+
+<p></p>
+
+
+
+<p><strong>There are a few reasons for these pitfalls.</strong></p>
+
+
+
+<p>The design pattern falls under an idealised assumption that domains are distinctly independent, and there will be no overlap or cross-referencing among domains. In real world business settings this is rarely the case.&nbsp;</p>
+
+
+
+<p>The distinction of whether certain data should be considered shared, or owned by a domain, and by which domain, is often not crystal clear, especially when dependencies exist. Multiple domains could be involved in different stages of a single data value chain. The dependency relationships also evolve over time. Data previously consumed solely within a domain could be required by another domain later, when new business needs arise.</p>
+
+
+
+<p>I have talked to a few data architects who hold the opinion that, democratised data development process comes with the inescapable tradeoff between duplication and speed. They decide to accept a certain level of compromise. “We want the domains to build the data they need. If they happen to build the same things in each domain, then so be it. At the end of the day, development needs to move forward.”</p>
+
+
+
+<p>Others, like me, who are more adamant on the single source of truth, heed another approach.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Practical Solutions for Hybrid Mesh Implementation</strong></h2>
+
+
+<div>
+  <p>Let me be upfront on this: The practical solution to the mesh-y domain problems is almost always – moving upstream. In other words, reverting back to centralisation, and moving away from mesh.</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>The rules are simple:&nbsp;</p>
+
+
+
+<ol class="wp-block-list">
+<li>Cross-referencing among domains is not allowed. Domain data is strictly domain-only.</li>
+
+
+
+<li>If data needs to be shared among domains, place it upstream at the centralised location.&nbsp;</li>
+
+
+
+<li>When domain data needs to be reused by another domain, move it upstream to the centralised location.</li>
+</ol>
+
+
+
+
+
+<p><em>[Figure 3: Hybrid Mesh Hub-and-Spoke Architecture Practical Solution]<br></em></p>
+
+
+
+<p>Figure 3 illustrates the eventual architecture in practical implementation. All data which is shared and reused across domains resides in the Central Integration layer, establishing a single source of truth, and reconciling the dependency complications.&nbsp;</p>
+
+
+
+<p>In Part 2 of this article, I will explain in detail with examples what each layer contains, and the dependencies among the layers.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Alternative Hybrid Mesh Architecture Design for Business Value</strong></h2>
+
+
+
+<p>The further downstream we move on the data value chain, the more dependencies interlock the business insights. Consider for example the need to aggregate various facts, to construct profiles or segments on customers or products, and automate actions based on the profiles.&nbsp;</p>
+
+
+<div>
+  <p>To meet real world business requirements, data from various domains often need to be combined together at the end of the lineage, where data is turned into business value. The existing hub-and-spoke solution primarily benefits the data development process, yet is not optimised for creating value from data. </p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>Note the distance between the simplicity of the hub-and-spoke conceptual design in Figure 2, and the actual complexity during implementation illustrated by Figure 3.&nbsp;</p>
+
+
+
+<p>To better accommodate for real world data modelling needs for creating business value, and to reduce complexity in the architecture in practice, I propose an alternative design to the hub &amp; spoke pattern: the Hybrid Mesh Constellation Architecture.</p>
+
+
+
+
+
+<p><em>[Figure 4: Hybrid Mesh Constellation Design Pattern]</em></p>
+
+
+
+<p></p>
+
+
+<div>
+  <p>The Constellation design (Figure 4) observes similar rules as the practical hub-and-spoke solution. A central integration layer is established upstream, as the basis for domain development, with the addition of another centralised layer at the end, where data from the whole organisation is aggregated to generate holistic insights for the business.</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+
+
+<p><em>[Figure 5: Hybrid Mesh Constellation Architecture in Practice]<br></em></p>
+
+
+<div>
+  <p>The Constellation Architecture in practice (Figure 5) follows these principles:</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<ol class="wp-block-list">
+<li>Cross-referencing among domains is not allowed.&nbsp;</li>
+
+
+
+<li>If data needs to be shared among domains, place it upstream at the Central Integration layer.&nbsp;</li>
+
+
+
+<li>All aggregations are implemented downstream in the Central Aggregation layer, regardless of whether the aggregation is domain-specific, or cross-domain.</li>
+
+
+
+<li>The Central Aggregation layer allows only aggregation, and necessary downstream reintegration relying on aggregations (such as a Customer360 model that combines multiple aggregations). Other types of integration need to happen upstream in Central Integration.</li>
+</ol>
+
+
+
+<p>In Part 2 of this article, I will elaborate on the different layers of this architecture, and outline an actionable decision flow.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Hybrid Mesh as Governance Architecture</strong></h2>
+
+
+
+<p>By now, I’m sure you’d have noticed the elephant in the room: By moving data to a centralised location (in solving the hybrid mesh implementation problems), our architecture reverts towards the traditional centralised architecture, and away from mesh. So why did we choose to implement a mesh pattern in the first place?</p>
+
+
+
+<p>I apply the mesh principles not in the data models’ provenance, but in their properties.</p>
+
+
+<div>
+  <p>Think of Hybrid Mesh less in terms of residence architecture, but more as governance architecture. I advocate for centralised data residence with democratised execution. </p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<p>I will detail on the complete governance architecture in Part 2, including practical guidelines on “who does what and when”.</p></article>
+
+
+
+
+<div>
+  <h1>AI or ROI? Architecting for Success</h1>
+  <h1></h1>
+  <p>Watch On-Demand</p>
+  <p></p>
+  <p></p>
+  <p>https://pages.xebia.com/data-and-ai/ai-or-roi-webinar-series</p>
+</div>]]></content:encoded>
+    </item>
+  </channel>
+</rss>

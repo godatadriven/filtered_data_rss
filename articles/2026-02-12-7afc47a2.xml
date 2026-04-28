@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>AI-Driven Data Governance with Dataplex Aspect Types, Gemini, and BigQuery Data Policies</title>
+      <link>https://xebia.com/blog/ai-powered-data-governance-on-google-cloud/</link>
+      <guid>https://xebia.com/?p=129176</guid>
+      <pubDate>Thu, 12 Feb 2026 23:00:00 +0000</pubDate>
+      <dc:creator>Zhou Su</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>AI-Driven Data Governance with Dataplex Aspect Types, Gemini, and BigQuery Data Policies</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>Data governance on Google Cloud often fails not because of missing controls, but because classification, review, and enforcement live in different places. Engineers label columns in one system, data stewards review metadata in another, and access controls are enforced in a separate system. The result is brittle pipelines and manual handoffs.</p>
+
+
+
+<p>Google Cloud already provides the building blocks to close this gap. The challenge is using them with clear roles and boundaries.</p>
+
+
+
+<p>This post outlines a practical governance workflow built on three services: &#8211; Dataplex Universal Catalog &#8211; Gemini &#8211; BigQuery Policy Tags with Data Policies</p>
+
+
+
+<p>A demo implementation of this workflow is available in this <a href="https://github.com/godatadriven/data-governance-demo.git" rel="noopener">repo</a>.</p>
+
+
+
+<p><img decoding="async" alt="AI-powered data governance workflow" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/02/ai-powered-data-governance-on-google-cloud-workflow.png" title="ai-powered"><em>Figure 1: Architecture overview of a practical governance workflow in Google Cloud.</em></p>
+
+
+
+<h2 class="wp-block-heading">1. Register First: Why Dataplex Assets Matter</h2>
+
+
+
+<p>Before metadata can be attached or enforced, BigQuery datasets must be registered with Dataplex. Creating a Dataplex asset and enabling discovery ensures that BigQuery tables appear as first-class entries in the catalog.</p>
+
+
+
+<p>When you register a BigQuery dataset as a Dataplex asset, you create a catalog entry to make it discoverable. Metadata such as tags, aspects, and glossary terms can be attached to the catalog entry, along with lineage and an entry list (e.g. which tables are part of the dataset).</p>
+
+
+
+<p>This step is often skipped in examples, but it is essential: <a href="https://docs.cloud.google.com/dataplex/docs/enrich-entries-metadata#aspect-types" rel="noopener">Aspect Types</a> attach to catalog entries, not directly to BigQuery tables. Without discovery, there is nothing to annotate or read back later.</p>
+
+
+
+<h2 class="wp-block-heading">2. Describe, Don’t Enforce: Dataplex Aspect Types</h2>
+
+
+
+<p>Dataplex Aspect Types are designed for descriptive, reviewable metadata. In this workflow, a custom Aspect Type captures column-level attributes such as:</p>
+
+
+
+<ul class="wp-block-list">
+<li>category (PII, Transactional, Demographic, etc.)</li>
+
+
+
+<li>sensitivity (public, internal, restricted)</li>
+
+
+
+<li>reason (human-readable reason on why an attribute is attached to a column)</li>
+</ul>
+
+
+
+<p>Gemini is used to propose these values by inspecting the schema and sample rows. The output is written to column-scoped aspects on the catalogue entry. See <a href="https://github.com/godatadriven/data-governance-demo/blob/082df069b456afe0fe73f0f5a4bb8fb86109cec0/runtime/app.py#L23" rel="noopener">here</a> for the prompt used in the demo.</p>
+
+
+
+<p>Note that this step does not enforce access control. Aspect Types serve as a governance contract, capturing intent and context, and can be reviewed and edited by data stewards within the Dataplex UI.</p>
+
+
+
+<p><img decoding="async" alt="Dataplex" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/01/ai-powered-data-governance-on-google-cloud-aspect_type.png" title="ai-powered"> <em>Figure 2: Dataplex Catalog view showing column-level Aspect values, which can be reviewed and edited by non-technical personas (e.g, data stewards) in the UI.</em></p>
+
+
+
+<p>This separation matters. AI suggestions are useful, but governance requires a human checkpoint.</p>
+
+
+
+<h2 class="wp-block-heading">3. Enforce Separately: Policy Tags and Data Policies</h2>
+
+
+
+<p>Actual access control in BigQuery is implemented using Policy Tags and Data Policies.</p>
+
+
+
+<p>Policy Tags reside in a Data Catalog taxonomy and are designed for column-level security. Note that tags are labels only and do not enforce access control. They become operational only when bound to BigQuery Data Policies, which define masking behaviour such as:</p>
+
+
+
+<ul class="wp-block-list">
+<li>default masking for restricted data</li>
+
+
+
+<li>type-appropriate masking for internal data</li>
+</ul>
+
+
+
+<p>When a policy tag is attached to a column, BigQuery applies the masking automatically based on the querying user’s permissions.</p>
+
+
+
+<p><img decoding="async" alt="policy_tags" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/01/ai-powered-data-governance-on-google-cloud-policy_tags.png" title="ai-powered"> Figure 3: BigQuery schema view showing policy tag</p>
+
+
+
+<p>Personas with access to the data (e.g., admin or data steward) will see the data as intended, while personas without access (e.g., business users) will see the data masked. <img decoding="async" alt="view_admin" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/01/ai-powered-data-governance-on-google-cloud-view_admin.png" title="ai-powered"> <em>Figure 4: View of the unmasked data as seen by a persona with access to the data.</em></p>
+
+
+
+<p><img decoding="async" alt="view_nonadmin" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/01/ai-powered-data-governance-on-google-cloud-view_nonadmin.png" title="ai-powered"> <em>Figure 5: View of the masked data as seen by a persona without access to the data. Only the <code>public</code> column is visible. The other <code>internal</code> and <code>restricted</code> columns are masked with the default masking rule (NULL for string, 0 for numeric).</em></p>
+
+
+
+<h2 class="wp-block-heading">4. Bridging Description and Enforcement</h2>
+
+
+
+<p>There is no built-in synchronization between Aspect Types and Policy Tags—and that is by design. They serve different purposes.</p>
+
+
+
+<p>The bridge is a small automation step:</p>
+
+
+
+<ol class="wp-block-list">
+<li>Read column-level Aspect values from the Dataplex catalog entry</li>
+
+
+
+<li>Map the sensitivity field to a policy tag with the same semantic meaning</li>
+
+
+
+<li>Update the BigQuery table schema to apply those tags</li>
+</ol>
+
+
+
+<p>The process is illustrated in the following diagram:</p>
+
+
+
+<p><img decoding="async" alt="aspect_to_tags" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/02/ai-powered-data-governance-on-google-cloud-aspect_to_tags.png" title="ai-powered"> <em>Figure 6: The process of bridging Dataplex Aspects to Policy Tags.</em></p>
+
+
+
+<p>This keeps responsibilities clean: &#8211; Gemini suggests &#8211; Dataplex Aspects document and expose intent &#8211; Policy Tags + Data Policies enforce access</p>
+
+
+
+<h2 class="wp-block-heading">5. Why This Matters</h2>
+
+
+
+<p>Google Cloud also offers <a href="https://cloud.google.com/security/products/sensitive-data-protection?hl=en" rel="noopener">Sensitive Data Protection (SDP)</a> for automated discovery and classification, and it fits well into this model. SDP can populate standardized aspects at scale. Custom Aspect Types remain valuable when classification logic is domain-specific or requires explanation.</p>
+
+
+
+<p>The key insight is architectural: separate description from enforcement, and connect them explicitly. Dataplex provides the catalog and review surface, Gemini accelerates classification, and BigQuery enforces policy where it actually matters—at query time.</p>
+
+
+
+<p>Used together, these tools form a governance workflow that is auditable, reviewable, and enforceable without collapsing everything into a single opaque step.</p>
+
+
+
+<p>Photo by <a href="https://unsplash.com/@pawel_czerwinski?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" rel="noopener">Pawel Czerwinski</a> on <a href="https://unsplash.com/photos/google-sign-fpZZEV0uQwA?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText" rel="noopener">Unsplash</a></p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
