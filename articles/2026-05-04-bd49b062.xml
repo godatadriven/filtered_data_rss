@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>From Data Pipelines to Agentic Workflows: A Shift in Analytics Engineering </title>
+      <link>https://xebia.com/blog/from-data-pipelines-agentic-workflows-shift-analytics-engineering/</link>
+      <guid>https://xebia.com/?p=152213</guid>
+      <pubDate>Mon, 04 May 2026 13:14:49 +0000</pubDate>
+      <dc:creator>yannickbosch</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1><strong>From Data Pipelines to Agentic Workflows: A Shift in Analytics Engineering</strong></h1>
+  <p></p>
+</div>
+
+<article>
+  <h4 class="wp-block-heading"><strong>What are agentic workflows in analytics engineering and why do they matter?</strong></h4>
+
+
+
+<p>Agentic workflows are systems that actively support users in structuring, transforming, and combining data, guiding decisions rather than requiring every step to be manually engineered into a pipeline. For analytics engineering, this shift matters because it redistributes how data work is organized: reducing the bottleneck on specialist teams, making self-service more realistic for business users, and shortening the path from raw data to actionable insight without replacing the need for human judgment and strong data foundations.</p></article>
+
+
+
+
+<article>
+  <p>For many organizations, becoming truly&nbsp;data-driven still depends on something&nbsp;seemingly&nbsp;basic&nbsp;yet critical: getting&nbsp;data&nbsp;ready&nbsp;for analytics. Despite modern&nbsp;data platforms and increasingly powerful tooling,&nbsp;preparing&nbsp;data&nbsp;is&nbsp;still&nbsp;often manual and time-consuming. As organizations scale their&nbsp;data&nbsp;use, this quickly becomes a bottleneck.&nbsp;</p>
+
+
+
+<p>At the same time,&nbsp;a new approach&nbsp;is&nbsp;emerging:&nbsp;agentic&nbsp;workflows&nbsp;that actively support users in structuring, transforming, and combining&nbsp;data. Rather than relying solely on manually engineered pipelines, these workflows introduce systems that guide decisions and reduce the effort&nbsp;required&nbsp;to work with&nbsp;data.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>The hidden constraint in&nbsp;data-driven organizations</strong>&nbsp;</h2>
+
+
+
+<p>Most companies already have&nbsp;some of&nbsp;the right building blocks in place.&nbsp;Data warehouses are set up, dashboards are live, and use cases are defined.&nbsp;Yet behind the scenes, a significant part of the work still relies on specialized&nbsp;expertise, which can become a bottleneck as demand grows.&nbsp;</p>
+
+
+
+<p>Ingesting&nbsp;data is&nbsp;only the first&nbsp;step. Turning raw&nbsp;data into something usable requires interpretation, transformation, and alignment with existing models.&nbsp;It also requires understanding how&nbsp;datasets relate to each other, often based on&nbsp;context that lives in people’s heads rather than in documentation. As demand grows, so does the pressure on these teams: more requests come in,&nbsp;time-to-insight&nbsp;increases, and progress slows.&nbsp;This is exactly where&nbsp;agentic&nbsp;workflows&nbsp;come in:&nbsp;not by replacing the platform, but by reshaping how&nbsp;data work is distributed, supported, and executed across the organization, augmenting the teams involved rather than replacing them.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>From pipelines to&nbsp;agentic&nbsp;workflows</strong>&nbsp;</h2>
+
+
+
+<p>What if preparing and integrating&nbsp;data&nbsp;didn’t&nbsp;require translating every step into code first? What if the process could be guided instead of engineered?&nbsp;</p>
+
+
+
+<p>This is where we see a shift towards more&nbsp;agentic&nbsp;workflows. Instead of building pipelines step by step,&nbsp;users interact with systems that can analyze&nbsp;data patterns, support them in making decisions along the way, and guide the sequence of steps needed to move from raw&nbsp;data to a usable&nbsp;dataset. In practice, this looks different from traditional&nbsp;data work. A user uploads a&nbsp;dataset, and instead of writing transformations, the system suggests how the&nbsp;data could be structured, highlights inconsistencies, and proposes how it could be combined with existing&nbsp;datasets. The user reviews, adjusts, and approves, making the workflow iterative and interactive rather than predefined and static.&nbsp;</p>
+
+
+
+<p>There’s&nbsp;nothing fundamentally new about this.&nbsp;We’ve&nbsp;been abstracting and automating parts of&nbsp;data workflows for years.&nbsp;What’s&nbsp;different now is that systems are&nbsp;increasingly&nbsp;playing&nbsp;an&nbsp;active role in helping users make decisions,&nbsp;rather than&nbsp;just executing predefined steps. At the same time,&nbsp;it’s&nbsp;important to stay realistic about what this means.&nbsp;These systems don’t actually understand the business context behind a&nbsp;dataset.&nbsp;They work with patterns, metadata, and signals in the&nbsp;data itself, which means making&nbsp;sense of&nbsp;that still requires human judgment. In practice, these workflows are most effective when they support domain experts&nbsp;rather thanreplace them. The user&nbsp;remains&nbsp;responsible for interpreting and&nbsp;validating&nbsp;the system’s&nbsp;suggestions.&nbsp;</p>
+
+
+
+<p>This changes the workflow entirely. It becomes less about&nbsp;building&nbsp;pipelines and more about guiding outcomes.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Why this matters in practice</strong>&nbsp;</h2>
+
+
+
+<p>From a <a href="https://youtu.be/u40Bf-hXMMw?si=2R1s21Z78SZYgv4r" rel="nofollow noopener" target="_blank">strategy</a> perspective, this shift goes beyond efficiency. It changes how organizations&nbsp;operate.&nbsp;</p>
+
+
+
+<p>It makes self-service more realistic. Instead of waiting for&nbsp;an analytics&nbsp;engineer to model a new&nbsp;dataset, a business user can start working with it more directly, supported by the system. This does not remove the need for strong&nbsp;data foundations, but it makes the complexity more manageable and&nbsp;accessible. &nbsp;</p>
+
+
+
+<p>Beyond efficiency, it changes how organizations scale. Today, meeting the growing demand for analytics-ready&nbsp;data typically means adding more engineering capacity, which is already scarce. With&nbsp;agentic&nbsp;workflows, part of that effort is absorbed by the system itself, allowing teams to handle more work without growing at the same pace.&nbsp;</p>
+
+
+
+<p>On top of that, it shortens the path from&nbsp;data to insight. When the effort&nbsp;required&nbsp;to prepare and integrate&nbsp;data decreases, organizations can move faster: new&nbsp;datasets can be explored earlier, use cases can be tested sooner, and decisions can be made with less delay.&nbsp;<strong>It also creates more room for experimentation, allowing teams to learn faster and iterate more easily.</strong>&nbsp;</p>
+
+
+
+<p>At the same time, it introduces more consistency. Instead of every team structuring&nbsp;data in their own way, the system provides guidance, not by enforcing strict rules, but by nudging users towards better and more standardized decisions. This, however, raises&nbsp;the bar for governance. As more decisions are supported by AI, it becomes even more important to understand how those decisions are made, who is responsible, and how changes can be traced.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>How agentic workflows are changing the role of Analytics Engineers</strong></h2>
+
+
+
+<p>As&nbsp;agentic&nbsp;workflows&nbsp;become more guided and interactive, the role of&nbsp;<a href="https://xebia.com/cloud-data-modernization/analytics-engineering/">Analytics Engineering&nbsp;</a>shifts. Instead of focusing primarily on building pipelines, the focus moves&nbsp;towards designing systems&nbsp;that others can use effectively. This includes defining standards, embedding best practices, and ensuring that&nbsp;data&nbsp;governance is part of the workflow from the start.&nbsp;</p>
+
+
+
+<p>The role becomes less about doing the work and more about enabling it. At the same time, abstraction should not come at the cost of understanding. Even if systems&nbsp;take over&nbsp;part&nbsp;of&nbsp;the process, organizations still need to&nbsp;maintain&nbsp;clarity on how their&nbsp;data is structured and interpreted. Otherwise, new bottlenecks will simply&nbsp;emergein a different form.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Looking ahead</strong>&nbsp;</h2>
+
+
+
+<p>We are moving towards a world where&nbsp;data platforms do more than store and process&nbsp;data. They actively support how&nbsp;data is interpreted and used. This is part of a broader shift towards more&nbsp;agentic&nbsp;systems, where software not only executes tasks but actively supports users in navigating complex workflows.&nbsp;</p>
+
+
+
+<p>Agentic&nbsp;workflows&nbsp;are not a one-size-fits-all solution. More complex use cases will continue to require deep&nbsp;expertise&nbsp;and tailored approaches, but the direction is clear:&nbsp;data work is becoming more interactive, more accessible, and less dependent on manual implementation.&nbsp;</p>
+
+
+
+<p>This does not replace&nbsp;Analytics Engineers. It increases their leverage&nbsp;by allowing them to focus on higher-value problems, while more routine work becomes accessible to a broader&nbsp;user&nbsp;base.&nbsp;Ultimately, the biggest shift is not just technological, but organizational. It is about how teams collaborate, how responsibilities are distributed, and how decisions are made around data. In practice, this is also where the biggest blocker lies. Technology can enable agentic workflows, but without an updated operating model, the full potential remains out of reach. </p>
+
+
+
+<p>That means being concrete about how data teams are structured, how work flows between engineers and business users, and where human judgment is required. It also means treating AI governance not as a compliance afterthought, but as an active enabler, one that gives teams the confidence to act on AI-supported decisions. Organizations that get this right don&#8217;t just adopt new tooling; they redesign how data work gets done.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>What this means for your strategy</strong>&nbsp;</h2>
+
+
+
+<p>For leaders shaping their&nbsp;<a href="https://xebia.com/artificial-intelligence/ai-strategy-consulting/" data-type="link" data-id="https://xebia.com/artificial-intelligence/ai-strategy-consulting/">Data &amp; AI strategy</a>,&nbsp;agentic&nbsp;workflows&nbsp;are worth taking seriously, not as a technology trend, but as an organizational opportunity. The organizations that&nbsp;benefit&nbsp;most&nbsp;won’t&nbsp;necessarily be the ones with the most advanced platforms, but those that rethink how&nbsp;data work is organized: who does what, where&nbsp;expertise&nbsp;is needed, and how more people can contribute without losing quality or control. That is a strategic question before it is a technical&nbsp;one. &nbsp;</p>
+
+
+
+<p>This is also where we see our role. On the strategy side, we help organizations redesign workflows, clarify responsibilities, and&nbsp;identify&nbsp;where&nbsp;agentic&nbsp;support can create the most value without compromising governance. On the delivery side, we help translate that into practice through the underlying&nbsp;Data Engineering and&nbsp;Analytics Engineering&nbsp;work required to rebuild pipelines, prepare analytics-ready&nbsp;data, and embed these capabilities into the&nbsp;data platform.&nbsp;</p>
+
+
+
+<p>Are we only scaling our technology stack, or are we also evolving how people interact with&nbsp;data? Because the real leverage&nbsp;isn’t&nbsp;in the platform itself, but in closing the gap between business understanding and&nbsp;data execution.&nbsp;</p>
+
+
+
+<p></p>
+
+
+
+<h4 class="wp-block-heading">To sum up, here is what this article covered:</h4>
+
+
+
+<ul class="wp-block-list">
+<li>Most organizations already have the right building blocks in place, yet preparing data for analytics still depends on specialized expertise, and as demand grows, that becomes a bottleneck.</li>
+
+
+
+<li>Agentic workflows change this not by replacing the platform, but by reshaping how data work is distributed: users interact with systems that suggest, highlight, and guide, while humans review, adjust, and approve.</li>
+
+
+
+<li>This does not remove the need for human judgment. These systems work with patterns and metadata; making sense of that in a business context still requires domain expertise.</li>
+
+
+
+<li>The organizational impact is significant: self-service becomes more realistic, teams can scale without adding engineering capacity at the same pace, and the path from data to insight gets shorter.</li>
+
+
+
+<li>For analytics engineers, the role shifts from building pipelines to designing systems others can use with governance and standards embedded from the start.</li>
+
+
+
+<li>Ultimately, the biggest shift is not technological but organizational: rethinking who does what, where expertise is truly needed, and how more people can contribute without losing quality or control.<br><br></li>
+</ul></article>
+
+
+
+
+<div>
+  <h2></h2>
+  <p>Frequently Ask Questions</p>
+  <ul>
+    <li>
+  <h2><strong>What is the difference between a traditional data pipeline and an agentic workflow?</strong></h2>
+  <p>A traditional data pipeline requires specialists to manually translate every transformation step into code. An agentic workflow changes this by introducing systems that actively guide users through the process, analyzing data patterns, proposing how data could be structured or combined with existing datasets, and supporting decisions along the way. The workflow becomes iterative and interactive rather than predefined and static.</p></li>
+
+
+<li>
+  <h2><strong>Do agentic workflows replace analytics engineers?</strong></h2>
+  <p>No. Agentic workflows increase the leverage of analytics engineers by allowing them to focus on higher-value problems, while more routine work becomes accessible to a broader user base. The role shifts from building pipelines to designing systems that others can use effectively, defining standards, embedding best practices, and ensuring data governance is part of the workflow from the start.</p></li>
+
+
+<li>
+  <h2><strong>How do agentic workflows support data self-service?</strong></h2>
+  <p>Instead of waiting for an analytics engineer to model a new dataset, a business user can start working with it more directly, supported by the system. This does not remove the need for strong data foundations, but it makes the complexity more manageable and accessible to people without deep technical expertise.</p></li>
+
+
+<li>
+  <h2><strong>What are the governance risks of agentic workflows in data platforms?</strong></h2>
+  <p>As more decisions are supported by AI, governance becomes more critical, not less. It becomes even more important to understand how those decisions are made, who is responsible, and how changes can be traced. Abstraction should not come at the cost of understanding: organizations still need to maintain clarity on how their data is structured and interpreted, otherwise new bottlenecks will simply emerge in a different form.</p></li>
+
+
+<li>
+  <h2><strong>How do agentic workflows help organizations scale their analytics capacity?</strong></h2>
+  <p>Today, meeting growing demand for analytics-ready data typically means adding more engineering capacity, which is already scarce. With agentic workflows, part of that effort is absorbed by the system itself, allowing teams to handle more work without growing at the same pace. It also shortens the path from data to insight and creates more room for experimentation.</p></li>
+
+
+<li>
+  <h2><strong>Are agentic workflows suitable for all data use cases?</strong></h2>
+  <p>Not universally. More complex use cases will continue to require deep expertise and tailored approaches. These workflows are most effective when they support domain experts rather than replace them, the user remains responsible for interpreting and validating the system&#8217;s suggestions. The direction, however, is clear: data work is becoming more interactive, more accessible, and less dependent on manual implementation.</p></li>  </ul>
+</div>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
