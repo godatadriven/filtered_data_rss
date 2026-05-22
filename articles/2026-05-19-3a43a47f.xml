@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>You can ask AI anything. So why are trainings still worth it?</title>
+      <link>https://xebia.com/blog/you-can-ask-ai-anything-so-why-are-trainings-still-worth-it/</link>
+      <guid>https://xebia.com/?p=153271</guid>
+      <pubDate>Tue, 19 May 2026 12:03:55 +0000</pubDate>
+      <dc:creator>Lysanne van Beek</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1><strong>You can ask AI anything. So why are trainings still worth it</strong>?</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>In the age of AI, a lot of things suddenly feel like they&#8217;re on borrowed time. As a trainer, I get asked fairly regularly whether I&#8217;m worried AI will make my job obsolete. Honestly, it&#8217;s a fair question. Now that tools like ChatGPT and Claude exist, you can get answers to almost anything in seconds. Why would you still need a training?</p>
+
+
+
+<p>Here&#8217;s why.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>A training forces you to actually do it</strong></h2>
+
+
+
+<p>Say you want to learn about AI Agents. Or how to build a dashboard in Power BI. In theory, it&#8217;s never been easier: just ask a Large Language Model (LLM), maybe have it build you a learning plan, and off you go. But be honest: how often do you actually carve out time to follow through on that? I know I&#8217;m definitely guilty of keeping a list of topics I want to learn about, but it&#8217;s slowly gathering dust&#8230; Intentional learning time is something most people genuinely struggle to protect in a busy workday.</p>
+
+
+
+<p>And this is where a training (as simple as it sounds) is a surprisingly effective solution. Blocking out a dedicated day (or a few) creates real accountability. You&#8217;ve cleared your calendar. You&#8217;re there. You&#8217;re doing it. And if you&#8217;re Dutch like me, there&#8217;s an extra motivator: you paid good money for this, so you&#8217;d better make the most of it!</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>You can trust what you&#8217;re being taught</strong></h2>
+
+
+
+<p>Anyone who&#8217;s worked with LLMs long enough has had the experience: you ask a question, get a confident, well-structured answer and later find out it was completely wrong. LLMs can hallucinate: they confidently produce answers that are outdated, incomplete, or simply made up.</p>
+
+
+
+<p>I experienced this firsthand in 2025 when I asked ChatGPT about AI agents and it told me MCP stood for &#8220;Master Control Program.&#8221; I only found out it actually means Model Context Protocol when a colleague corrected me later. Embarrassing, but more importantly, it&#8217;s the kind of mistake that silently undermines your understanding.</p>
+
+
+
+<p>This is something a good training simply won&#8217;t do to you. Trainers are domain experts, and the material is actively kept up to date. What you learn, you can rely on. At Xebia, we make sure to keep all material fresh so you don&#8217;t have to go through this struggle yourself!</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>Good structure means faster, deeper learning</strong></h2>
+
+
+
+<p>When you&#8217;re learning on your own with an AI, you often don&#8217;t know what you don&#8217;t know. You might skip foundational concepts, jump ahead too fast, or vanish down a rabbit hole that&#8217;s interesting but not actually useful.</p>
+
+
+
+<p>Training courses are built differently. They&#8217;re designed around clear learning goals, sequenced to build understanding step by step. And because trainers run the same course repeatedly, they get to improve it with each iteration. That means by the time you attend, you&#8217;re benefiting from everything that&#8217;s been improved across dozens of previous sessions.</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>You learn by doing, not by reading</strong></h2>
+
+
+
+<p>Have you ever read something, thought &#8220;that looks straightforward,&#8221; and then completely fallen apart when you actually tried it? That was me the first time I tried to patch a flat bike tire. Spoiler: it did not go smoothly. Turns out, understanding the concept and being able to do the thing are two very different things.</p>
+
+
+
+<p>The same thing happens when you learn a new skill purely by chatting with an LLM. Reading an explanation feels like progress, but understanding only really happens when you get your hands dirty. When I was learning how to perform data analysis with pandas in Python, reading a book about it didn&#8217;t help me (this is legitimately what one of my programming teachers made us do). What did help me was just diving in and starting to solve problems.</p>
+
+
+
+<p>Good trainings are built around activating you as a student: exercises, hackathons, group discussions, and deliberate practice. You try, you get stuck, you figure it out and that&#8217;s exactly when it sticks. That&#8217;s why our trainings filled to the brim with activities and have as little listening time as possible.</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>You also learn from the people next to you</strong></h2>
+
+
+
+<p>This one often gets overlooked. Trainings put you in a room (or a call) with other people facing the same challenges you are. If you&#8217;re attending with your own team, it&#8217;s a rare chance to step away from the daily grind and actually learn <em>with</em> each other. If it&#8217;s an open training, you&#8217;ll be sitting next to people in similar roles at different companies. You&#8217;ll be swapping experiences, sharing war stories, and building your network. That kind of peer learning is something no AI can replicate.</p>
+
+
+
+<p>This is why our annual Summer School is one of my favourite times to train: we run multiple courses at the same time in our office and give people the opportunity to connect. Students always mention how much they enjoyed this aspect, even though they didn&#8217;t expect it!</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>It&#8217;s proof you actually did something</strong></h2>
+
+
+
+<p>Finally, there&#8217;s the credibility factor. Completing a multi-day training (where you had to show up, do exercises, and demonstrate understanding) is a meaningful signal to employers and clients. It&#8217;s a form of social proof, not unlike a diploma. Compare that to &#8220;I picked this up from ChatGPT,&#8221; and the reaction tends to be&#8230; less impressed.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>So is AI useless for learning?</strong></h2>
+
+
+
+<p>Not at all. LLMs are really good at transferring information to you. But in your work and daily life, understanding what something is isn&#8217;t really the goal. You want to actually <em>do</em> something differently. You want to walk into the office next Monday with a skill you didn&#8217;t have last Friday. Trainings are built for exactly that: they&#8217;re about changing behaviour, not just filling heads.</p>
+
+
+
+<p>Think about it this way: knowing the theory behind giving better feedback doesn&#8217;t immediately make you better at giving feedback. Reading about how to structure a data pipeline doesn&#8217;t mean you can build one under pressure. The gap between &#8220;I understand this&#8221; and &#8220;I can do this&#8221; is where most self-directed learning quietly falls apart, and it&#8217;s exactly the gap that good trainings are designed to close.</p>
+
+
+
+
+
+<h2 class="wp-block-heading">Join one of our courses to see how training can benefit you!</h2>
+
+
+
+<p>This learning by doing is exactly what we&#8217;ve built our courses around at Xebia. if you&#8217;re curious what that looks like in practice, then check out Xebia&#8217;s training options here:<br><br><a href="https://academy.xebia.com/training">https://academy.xebia.com/training</a></p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
