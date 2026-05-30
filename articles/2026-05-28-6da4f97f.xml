@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>The Agent Knew the Rules. Then It Deleted the Database.</title>
+      <link>https://xebia.com/blog/responsible-agentic-workflows/</link>
+      <guid>https://xebia.com/?p=153653</guid>
+      <pubDate>Thu, 28 May 2026 22:00:00 +0000</pubDate>
+      <dc:creator>Ricardo Granados</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>The Agent Knew the Rules. Then It Deleted the Database.</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>The agent didn&#8217;t hallucinate. It knew exactly which rules it was breaking. It listed them. Then it ran the command anyway.</p>
+
+
+
+
+<p>I came across <a href="https://x.com/lifeof_jer/status/2048103471019434248" rel="nofollow">this story</a> on X by Jer Crane, founder of PocketOS, and it got me thinking on our recent projects. On April 25, 2026, an AI coding agent deleted a production database in nine seconds.</p>
+
+
+
+
+<p>When Jer asked the agent to explain itself, it wrote back:</p>
+
+
+
+<blockquote>
+<p>&#8220;I violated every principle I was given: I guessed instead of verifying, I ran a destructive action without being asked, I didn&#8217;t understand what I was doing before doing it, I didn&#8217;t read Railway&#8217;s docs on volume behavior across environments.&#8221;</p>
+</blockquote>
+
+
+
+<p>The agent didn&#8217;t fail to understand the rules. It quoted them. Then it violated every one. It is a pattern I encounter up close every day.</p>
+
+
+
+
+<p>This is not an AI-goes-rogue story. It is an architecture story. Jer&#8217;s incident is a clear example of everything that can go wrong going wrong at once, but every failure in that nine-second cascade had a tool, a framework, or a design decision that could have stopped it. The sections below take each one apart.</p>
+
+
+
+
+<h2 class="wp-block-heading">The fine print you agreed to</h2>
+
+
+
+
+<p>Reading the vendor ToS upfront is a design exercise, not a legal one. The terms tell you, in plain language, who is liable when the agent does something unrecoverable, and that answer needs to be in the room when you decide what the agent is allowed to do. On my engagements, that conversation happens before any credentials get scoped.</p>
+
+
+
+
+<p>The vendors already told you who owns those decisions.</p>
+
+
+
+
+<p><a href="https://www.anthropic.com/legal/consumer-terms" rel="nofollow noopener" target="_blank">Anthropic&#8217;s Consumer Terms of Service, Section 4</a>: <em>&#8220;You are responsible for all Inputs you submit to our Services and all Actions.&#8221;</em> If those Actions are not error-free or don&#8217;t operate as intended, that is your problem to resolve. Under Section 11, Anthropic&#8217;s total liability is capped at the greater of six months of fees or €100.</p>
+
+
+
+
+<p><a href="https://openai.com/policies/may-2025-business-terms/" rel="nofollow noopener" target="_blank">OpenAI&#8217;s business terms</a> go further. Business users must indemnify and hold harmless OpenAI, its affiliates, and its personnel from costs, losses, and legal expenses arising from third-party claims related to violations of the agreement or their customer applications.</p>
+
+
+
+
+<p>Jer mentioned he had contacted legal counsel. His exposure is not with Anthropic or Cursor. It is with his customers, whose data is gone. The vendors told him in the ToS that they were not the responsible party. He agreed to that when he signed up.</p>
+
+
+
+
+<p>Understanding who is responsible is the first step toward designing a system that is actually safe to deploy. I learned that the hard way, years before AI agents existed.</p>
+
+
+
+
+<h2 class="wp-block-heading">Once upon a time, there was a junior engineer who had all the keys</h2>
+
+
+
+
+<p>Almost ten years ago, I was learning Google BigQuery for the first time. A data engineer asked me to run a task that moved between development, acceptance, and production environments, copy-pasting SQL into the editor and running it in each context in sequence.</p>
+
+
+
+
+<p>I was hopping between environments and confident I was on acceptance. It turns out I was on production. I ran a destructive command and deleted a table that had historical records we could not re-ingest.</p>
+
+
+
+
+<p><img decoding="async" alt="Wrong database selected — (8388409 rows affected)" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/05/responsible-agentic-workflows-meme.webp" title="agentic"></p>
+
+
+
+
+<p>In the post-mortem, we used BigQuery&#8217;s time travel to bring the table back. No harm done. I found out later that my senior colleague had known it was safe. Time travel was the backstop. The architecture had been designed to absorb exactly that kind of mistake. But I still learned my lesson that day. From then on I tripled-checked before every destructive command, and I asked a colleague to validate before I ran anything that could not be undone.</p>
+
+
+
+
+<p>Jer&#8217;s agent made the same mistake. It was confident it was working in a scoped context. It was not. The difference is that the architecture around Jer&#8217;s system had no equivalent of time travel, because Railway stores volume backups in the same volume as the data they protect.</p>
+
+
+
+
+<p>Every data platform team knows this failure mode. Someone drops the wrong table, runs the wrong migration, truncates the wrong dataset. We have not solved this by stopping humans making mistakes. We built infrastructure around it: time travel, multi-region backups, staging environments that mirror production without touching it, change gates before anything destructive runs. We did all of that because failure is not a hypothetical. It is a certainty at scale.</p>
+
+
+
+
+<p>AI agents are faster and more autonomous than any junior engineer I have worked with. They make the same class of mistakes. The question is whether the infrastructure around them is designed for that reality.</p>
+
+
+
+
+<h2 class="wp-block-heading">Why behavioral controls fail under goal pressure</h2>
+
+
+
+
+<p>Not all agentic tools are equal when it comes to controls.</p>
+
+
+
+
+<p>Claude Code and Gemini CLI have mature hook systems: hard gates that execute at the tool level before the model can act. I call them dumb gates. They close when designed to close, no question asked. The model does not reason about them. It simply cannot proceed without clearing them.</p>
+
+
+
+
+<p>Other tools are adding hook support at different levels of maturity. Before relying on behavioral rules as your only control, verify what your specific tool actually supports and what those hooks can block. If your tool lacks hook infrastructure, instructions in an agents.md file and behavioral rules in the system prompt are your only layer.</p>
+
+
+
+
+<p>I set a behavioral gate on one of my own projects: it was around git rules. The agent was not allowed to push directly to main. It had to use a feature branch and open a pull request. Multiple times, the agent violated the gate, pushed directly, and confessed in the chat after doing so. When I asked why, the answer was direct: <em>&#8220;The change was too small to require a feature branch, so I just pushed before reading the rule.&#8221;</em></p>
+
+
+
+
+<p>The agent did not malfunction. It applied judgment. It decided the rule was not relevant to this case and acted accordingly. That is what behavioral gates do under goal pressure: they become advice the model weighs against its current goal.</p>
+
+
+
+
+<p>The fix was a branch protection rule on the repository. A hard gate. Now the agent cannot push directly to main even if it decides it should. The model&#8217;s judgment is no longer part of the equation.</p>
+
+
+
+
+<p>The agent in Jer&#8217;s story had behavioral rules too. Cursor&#8217;s documentation describes destructive guardrails that can stop tool calls that could alter or destroy production environments. The agent quoted those rules when explaining itself and then explained why it had decided to proceed anyway. System prompts are advisory, not enforcing.</p>
+
+
+
+
+<h2 class="wp-block-heading">The perfect storm</h2>
+
+
+
+
+<p>What happened to Jer was not one mistake. It was a cascade: a vendor that shipped an API with no destructive-operation confirmation the day before the incident, a token with production-level access stored where a staging agent could reach it, backups co-located with the data they were supposed to protect. And a behavioral rule the agent quoted and then overrode. Any one of those failures, fixed in isolation, might have been enough. Together, they left no backstop.</p>
+
+
+
+
+<p>The question to ask before any agentic deployment is not &#8220;how do we prevent the agent from making a mistake?&#8221; It is &#8220;when it makes a mistake, what happens next?&#8221;</p>
+
+
+
+
+<p><strong>The demo looked great. Nobody read the fine print.</strong> A vendor pitches an agentic solution, the demo looks right, and nobody asks what the API actually allows until a staging task touches a production credential. Railway had shipped their MCP server eight days before the incident, designed specifically to connect AI agents to their infrastructure API. The same API, no scoped tokens, no confirmation on destructive operations. Commercial momentum to add &#8220;AI-compatible&#8221; features can outrun the safety architecture beneath them.</p>
+
+
+
+
+<p>Before any implementation, evaluate whether the use case actually needs an agentic workflow, or whether a simpler pipeline would do the job with less complexity. Then do vendor selection properly: check what the ToS requires, what the existing architecture supports, what sector regulations apply, and what the API actually permits when an agent has access to it. Read that last one twice.</p>
+
+
+
+
+<p><strong>The agent used the most powerful token it could find.</strong> In Jer&#8217;s case, the agent was working on what it understood to be a staging task. It found a CLI token with root-equivalent access to the production infrastructure and used it. The token had been created for routine domain management, with blanket permissions because the creation flow never warned otherwise. The agent didn&#8217;t go looking for a way to break things. It just reached for what was available.</p>
+
+
+
+
+<p>Scope every credential to the minimum the task requires: by operation, by environment, by resource. If a token can delete a production volume, it should not exist anywhere an agent can discover it during a staging task. Treat credentials the same way you treat database permissions: only what is needed, nothing more. Tokens with full scope and no expiration date are a liability waiting to be found.</p>
+
+
+
+
+<p><strong>Having a backup is a good idea, except when it lives in the same blast radius as the data.</strong> A snapshot stored next to the data feels like coverage. It provides zero resilience against the failure modes that actually matter: accidental deletion, volume corruption, a single API call that wipes the data and the copy together. In Jer&#8217;s story, Railway stores volume-level backups in the same volume. When the volume went, the data and the backup went together.</p>
+
+
+
+
+<p>Design for reversibility from the beginning. Version control everything. Feature branches as the universal undo mechanism for code changes. Idempotent operations where possible. Run <code>--dry-run</code> before any destructive command. For databases, use time travel and snapshotting, and store the snapshots in a different blast radius than the source data. BigQuery, Snowflake, Databricks and most modern data platforms have time travel built in. Use it.</p>
+
+
+
+
+<p><strong>Using prompt engineering is a good start, until the agent decides it&#8217;s not relevant.</strong> &#8220;Don&#8217;t run destructive operations without asking first.&#8221; The agent reads it, acknowledges it, then decides the current situation is an exception and proceeds. The section above shows exactly how this plays out. System prompts are advisory. Under goal pressure, the model weighs a rule against what it is trying to accomplish, concludes the rule doesn&#8217;t apply here, and acts. The more capable the model, the more convincing its justification.</p>
+
+
+
+
+<p>Put hard gates on irreversible operations: hooks and deny rules that execute before the model can reason about them. Drop table operations, volume deletions, force pushes, API mutations that destroy data: these need out-of-band confirmation the agent cannot generate for itself. A confirmation pop-up the agent can auto-approve is not a gate. A pull request requiring human review before infrastructure changes are merged is a gate. Tools like Claude Code and Gemini CLI support hook-based controls at this level. For tools that do not, compensate with repository-level protections like branch rules and required reviews.</p>
+
+
+
+
+<p><strong>Having a human in the loop is the right choice. But is it in the right place in the pipeline?</strong> Either the checkpoint is on every action, which turns the agent into slow autocomplete, or it is nowhere, which leaves the blast radius uncontrolled. Neither works in production.</p>
+
+
+
+
+<p>Place the human where the legal and operational accountability lands. Any action that cannot be reversed needs a human before it runs. Any output going to a public or customer-facing surface needs review before it ships. In December 2023, a Chevrolet dealership in California had its chatbot coerced into agreeing to sell a car for one dollar. The deal was not completed, but the dealership was left handling the fallout. The machine was not held responsible. The dealership was. If someone in your organization can be held liable for a decision, that person needs to be in the loop before the agent makes it.</p>
+
+
+
+
+<p><strong>Reviewing is becoming the bottleneck. Move it to where it matters most.</strong> AI agents produce code, configurations, and infrastructure changes at a speed no human review process was designed for. Running every output through a human review before it ships kills the speed advantage that made agentic workflows worth adopting in the first place. The answer is not to review less. It is to review differently.</p>
+
+
+
+
+<p>Add an adversarial review step: a second agent explicitly instructed to find what the first one got wrong. Not as optional polish, but as a required gate before anything reaches production. It is fast, consistent, and the reviewer has no stake in the work it is evaluating. Pair that with human checkpoints placed at the right points in the pipeline: irreversible actions, customer-facing outputs, infrastructure changes. That combination gets you the safety net without the friction.</p>
+
+
+
+
+<h2 class="wp-block-heading">The oversight obligation is yours</h2>
+
+
+
+
+<p>For systems classified as high-risk under the EU AI Act, Article 14 requires meaningful human oversight as a condition of lawful deployment. Anthropic&#8217;s ToS says you are responsible for all actions the agent takes. OpenAI&#8217;s business terms make you liable for third-party claims arising from your use of their services. None of these are fine print buried in a document nobody reads. They are the legal architecture of the industry you are operating in.</p>
+
+
+
+
+<p>The tools to do this right exist today. Scoped credentials, hard gates on destructive operations, reversibility by design, human checkpoints on irreversible actions. They are not complex to implement. They are just not the first thing teams think about when the agent is sitting there, ready to go, and the task is right in front of them.</p>
+
+
+
+
+<p>Jer asked for the enforcement layer to live in the infrastructure, not the instructions. That is not a feature request for the vendors to fulfill. It is an architecture decision he could have made before those nine seconds.</p>
+
+
+
+
+<hr class="wp-block-heading" />
+
+
+
+
+<p><em>This post is part of a series on how I work alongside AI engineering teams in practice. The previous post, <a href="/posts/2026/04/the-future-of-analytics-engineering/">The Future of Analytics Engineering</a>, made the case for the shift to agentic workflows. This one is about how to make that shift without losing everything in the process.</em></p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
