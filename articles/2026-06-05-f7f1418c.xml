@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Your Data &amp; AI Operating Model Is Under Pressure – And Innovation Alone Won’t Fix It </title>
+      <link>https://xebia.com/articles/your-data-ai-operating-model-is-under-pressure-and-innovation-alone-wont-fix-it/</link>
+      <guid>https://xebia.com/?post_type=articles&amp;p=154117</guid>
+      <pubDate>Fri, 05 Jun 2026 13:49:54 +0000</pubDate>
+      <dc:creator>Steven Nooijen</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1><strong>Your Data &#038; AI Operating Model Is Under Pressure &#8211; And Innovation Alone Won’t Fix It</strong> </h1>
+  <p></p>
+</div>
+
+<article>
+  <p>This is an article written by Steven Nooijen, Head of Data &amp; AI Strategy at Xebia, and was originally published on <a href="https://www.linkedin.com/pulse/your-data-ai-operating-model-under-pressure-more-wont-steven-nooijen-6qnhe" target="_blank" rel="noreferrer noopener nofollow">Steven’s blog</a>.  </p>
+
+
+
+<h2 class="wp-block-heading"><strong>Why Most AI Strategies Fail to Deliver Value </strong></h2>
+
+
+
+<p>Most AI strategies fail quietly. Not because the technology underperforms, but because the organization around it&nbsp;can’t&nbsp;keep up.&nbsp;</p>
+
+
+
+<p>Over the past three months,&nbsp;we’ve&nbsp;spoken with Chief Data &amp; AI Officers across industries about the&nbsp;10&nbsp;forces reshaping their operating models&nbsp;(see&nbsp;infographic below). The pattern is consistent, and&nbsp;it’s&nbsp;uncomfortable: the pace of AI innovation has outrun the governance, architecture, and role definitions most organizations were built on. Leaders who treat AI as a series of point bets&nbsp;&#8211;&nbsp;another pilot here, another tool there&nbsp;&#8211;&nbsp;are steadily losing ground to those rebuilding the machinery underneath.&nbsp;</p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>10 Forces Reshaping Data &amp; AI Operating Models. One conclusion </strong></h2>
+
+
+
+<p>The signals we hear most often cluster into ten themes. Boards want&nbsp;<strong>ROI</strong>&nbsp;on AI investment, fast. Employees want&nbsp;<strong>self-service</strong>&nbsp;access to AI tools, while legal wants airtight governance. The&nbsp;<strong>AI-ready data</strong>&nbsp;question&nbsp;(FAIR, trusted,&nbsp;well&nbsp;documented&nbsp;data)&nbsp;has become the blocker behind half the stalled use cases.&nbsp;<strong>Roles are shifting</strong>: the skills that defined a senior data engineer two years ago no longer fully describe the job&nbsp;now that AI is writing code at lightning speed.&nbsp;<strong>AI agents</strong>&nbsp;are&nbsp;reshaping business processes and&nbsp;introducing competencies&nbsp;that no one has&nbsp;formal career paths for yet.&nbsp;The&nbsp;<strong>productivity gains</strong>&nbsp;are real but&nbsp;depend&nbsp;on workflow&nbsp;and workforce&nbsp;redesign&nbsp;as well as system integration between&nbsp;<strong>AI and IT</strong>.&nbsp;<strong>AI governance</strong>&nbsp;is&nbsp;though with AI being democratized across the company, while&nbsp;regulatory&nbsp;requirements&nbsp;are increasing pressure to keep control.&nbsp;<strong>Fear of automation</strong>&nbsp;is a change-management problem leaders keep underestimating. And&nbsp;<strong>digital sovereignty</strong>&nbsp;is pushing many organizations to rethink their cloud dependencies entirely.&nbsp;</p>
+
+
+
+<p>Individually, each is manageable. Together, they expose a single truth: your operating model,&nbsp;not your tech stack,&nbsp;is the bottleneck.&nbsp;</p>
+
+
+
+<p>Not sure whether yours is quietly breaking down?&nbsp;We&#8217;ve&nbsp;captured the most common warning signs in a separate piece:&nbsp;<a href="https://xebia.com/blog/your-data-ai-operating-model-needs-an-update/" target="_blank" rel="noreferrer noopener">the red flags that signal your Data &amp; AI operating model needs an update</a>.&nbsp;&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Adaptability — Not Innovation — Is the New Competitive Advantage </strong></h2>
+
+
+
+<p>Here’s&nbsp;the provocative part. In a world where new tools and model capabilities ship weekly, chasing each one is a losing strategy. The organizations pulling ahead&nbsp;aren’t&nbsp;the ones with the most pilots.&nbsp;They’re&nbsp;the ones whose&nbsp;<strong>processes, structures, and governance frameworks are designed to absorb&nbsp;and guide&nbsp;change</strong>&nbsp;quickly.&nbsp;</p>
+
+
+
+<p>Adaptability, not innovation, is the differentiator now. And adaptability is built, not bought.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>How to Fix Your Data &amp; AI Operating Model: Five moves that actually compound </strong></h2>
+
+
+
+<p>If&nbsp;you’re&nbsp;a CDAIO, CIO, or executive owning this agenda,&nbsp;the below&nbsp;five actions&nbsp;will help you create the adaptive and resilient organization that you need:&nbsp;</p>
+
+
+
+<ol start="1" class="wp-block-list">
+<li><strong>Create an ethical compass</strong>. A set of AI usage principles and values everyone in the organization understands. This is the foundation that makes every later decision faster. </li>
+</ol>
+
+
+
+<ol start="2" class="wp-block-list">
+<li><strong>Establish an AI steering committee</strong> with designated AI officers embedded in each business unit. This gives you the portfolio overview that you need to be in control and helps prevent shadow initiatives before they fragment your stack. </li>
+</ol>
+
+
+
+<ol start="3" class="wp-block-list">
+<li><strong>Define an AI lifecycle process</strong> that continuously re-evaluates existing applications. AI systems drift. What worked six months ago may now be underperforming, non-compliant, or simply obsolete.  </li>
+</ol>
+
+
+
+<ol start="4" class="wp-block-list">
+<li><strong>Document and redesign the business processes</strong> where AI will have the greatest impact. Bolting AI onto a broken workflow multiplies the dysfunction; redesigning the workflow multiplies the gain. </li>
+</ol>
+
+
+
+<ol start="5" class="wp-block-list">
+<li><strong>Build agile architecture and procurement capabilities</strong> so that when the next category-defining tool arrives, you can adopt it in weeks, not quarters. </li>
+</ol>
+
+
+
+<p>If these&nbsp;five moves sound abstract,&nbsp;watch&nbsp;<a href="https://events.xebia.com/data-and-ai/operating-data-and-ai-models-zilveren-kruis-on-demand-webinar" target="_blank" rel="noreferrer noopener">our webinar with Zilveren Kruis (Achmea)</a>,&nbsp;one of the&nbsp;largest insurers in the Netherlands, to understand how&nbsp;it could&nbsp;look like&nbsp;in practice.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>The Real Question for Data &amp; AI Leaders </strong></h2>
+
+
+
+<p></p></article>
+
+
+<div>
+  <h2><strong>Frequently Asked Questions</strong></h2>
+  <p></p>
+  <ul>
+    <li>
+  <h2><strong>What is a Data &#038; AI operating model?</strong> </h2>
+  <p>A Data &#038; AI operating model defines how data teams, business units and IT collaborate to deliver AI solutions — including governance, roles, processes and technology. </p></li>
+
+
+<li>
+  <h2><strong>Why do most AI initiatives fail to scale?</strong> </h2>
+  <p>Most AI initiatives fail not because of technology, but because organizations lack the right operating model to support governance, ownership and production deployment. </p></li>
+
+
+<li>
+  <h2><strong>What are the key signs your operating model needs an update?</strong> </h2>
+  <p>Common signs include too many disconnected AI pilots, unclear ownership, governance bottlenecks, and difficulty moving from experimentation to production. </p></li>
+
+
+<li>
+  <h2><strong>How can organizations scale AI effectively?</strong> </h2>
+  <p>Scaling AI requires aligning operating model, governance, roles and architecture — not just investing in new tools or technologies. </p></li>
+
+
+<li>
+  <h2><strong>What role does governance play in AI adoption?</strong> </h2>
+  <p>AI governance ensures that AI systems are secure, compliant and used responsibly, especially as AI becomes more accessible across the organization. </p></li>  </ul>
+</div>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
