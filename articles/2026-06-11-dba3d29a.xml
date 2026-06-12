@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>The Four Value Plays of AI Strategy. And Why They Require Different Approaches </title>
+      <link>https://xebia.com/articles/value-plays-ai-strategy-why-require-different-approaches/</link>
+      <guid>https://xebia.com/?post_type=articles&amp;p=154805</guid>
+      <pubDate>Thu, 11 Jun 2026 14:21:23 +0000</pubDate>
+      <dc:creator>Steven Nooijen</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1><strong>The Four Value Plays of AI Strategy. And Why They Require Different Approaches</strong>.</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>This is an article written by Steven Nooijen, Head of Data &amp; AI Strategy at Xebia, and was originally published on <a href="https://www.linkedin.com/pulse/four-value-plays-ai-strategy-steven-nooijen-dwqnf" target="_blank" rel="noreferrer noopener nofollow">Steven’s blog</a>. </p>
+
+
+
+<h2 class="wp-block-heading"><strong>Why Most AI Strategies Create Confusion </strong></h2>
+
+
+
+<p>Ask ten executives what their “AI strategy” is and&nbsp;you’ll&nbsp;get ten answers that sound similar&nbsp;but address&nbsp;different things. One is rolling out Copilot licenses. Another is&nbsp;speeding up the software delivery lifecycle. A third is automating an invoicing process. The fourth is evaluating LLM platforms for a&nbsp;customer facing&nbsp;chatbot.&nbsp;&nbsp;</p>
+
+
+
+<p>AI enables four different value plays. If you don’t distinguish between them, the chances are that your AI conversation creates confusion. Each play has its own benefits, challenges, operating model, and hence investment logic. This article describes the four plays, so that you can create a clear and actionable AI Strategy for your organization. </p>
+
+
+
+
+
+<h2 class="wp-block-heading"><strong>1. Personal Productivity AI </strong></h2>
+
+
+
+<p>Tools that&nbsp;enable&nbsp;individual knowledge workers&nbsp;in their day-to-day jobs through assistants like Microsoft CoPilot, ChatGPT,&nbsp;Gemini or Claude CoWork.&nbsp;AI tasks cover&nbsp;writing&nbsp;emails, summarizing meetings, analyzing&nbsp;documents and&nbsp;spreadsheets,&nbsp;or&nbsp;building decks.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Questions we hear from leadership:</strong>&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we drive adoption beyond our early enthusiasts to the whole workforce, including the lagging employees?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we govern dozens of decentralized AI initiatives across business units?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“Can our AI assistant tooling be trusted with our sensitive documents and data?” </li>
+</ul>
+
+
+
+<p><strong>What makes it&nbsp;hard.&nbsp;</strong>This category looks easy because the tools are cheap and&nbsp;abundant, but&nbsp;extracting real value from them is much harder than buying licenses.&nbsp;In many&nbsp;organizations&nbsp;adoption stays shallow&nbsp;as&nbsp;training and change management are an afterthought. Anxieties about data security and compliance block the use cases that would matter most,&nbsp;with&nbsp;the&nbsp;biggest risk&nbsp;being&nbsp;confidential information leaking into the public domain.&nbsp;</p>
+
+
+
+<p><strong>Investment logic.&nbsp;</strong>The economics of this play are about&nbsp;adoption at scale. Licenses are cheap on a per-seat basis, but&nbsp;you’re&nbsp;rolling them out to&nbsp;hundreds&nbsp;of people, which means most of the real spend goes into training, support, and change enablement rather than the technology itself. The return shows up as hours&nbsp;saved&nbsp;across a large population&nbsp;with&nbsp;all kinds of&nbsp;activities,&nbsp;notoriously hard to tie back to revenue. Track success through adoption rates&nbsp;and cost-per-seat. Run the&nbsp;programme&nbsp;as an IT enablement effort, not an engineering one.&nbsp;</p>
+
+
+
+<p></p>
+
+
+
+<h2 class="wp-block-heading"><strong>2. Software Development AI </strong></h2>
+
+
+
+<p>Code assistants and LLM-powered development frameworks change how your&nbsp;engineers&nbsp;create&nbsp;software.&nbsp;These tools help&nbsp;developers&nbsp;with&nbsp;tasks like&nbsp;generating code, debugging, and creating documentation.&nbsp;This significantly speeds up the software delivery lifecycle (SDLC).&nbsp;</p>
+
+
+
+<p><strong>Questions we hear from leadership:</strong>&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we build autonomous coding agents that can ship safely, 24/7?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we evaluate the quality, security, and IP exposure of AI-generated code?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we set up standardized AI-first developer platforms for all our engineering teams?” </li>
+</ul>
+
+
+
+<p><strong>What makes it&nbsp;hard.&nbsp;</strong>The&nbsp;main&nbsp;metric in this play is speed, but the&nbsp;real challenge&nbsp;is the trade-off between speed and quality. Code that ships faster but fails under&nbsp;heavy&nbsp;load, or that introduces subtle security vulnerabilities, can erase the&nbsp;apparent&nbsp;productivity gains overnight. Security, IP, and compliance risks multiply once a model has access to your proprietary codebase.&nbsp;And there’s a softer challenge&nbsp;undermining adoption&nbsp;underneath all of this: engineers&nbsp;are losing&nbsp;trust in&nbsp;other people’s&nbsp;(AI-generated)&nbsp;code&nbsp;and&nbsp;are worried about&nbsp;lagging behind&nbsp;or&nbsp;even&nbsp;losing their jobs.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Investment logic.&nbsp;</strong>Costs in this category come in two layers: a per-engineer license fee for the tools themselves, and the often-underestimated cost of redesigning engineering workflows around them. The good news is that ROI is genuinely trackable through metrics like cycle time, deployment&nbsp;frequency&nbsp;and defect rate.&nbsp;If&nbsp;engineering leadership commits to measuring&nbsp;this&nbsp;deliberately,&nbsp;the spend becomes visible on the books and the gains become impossible to prove.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>3. Business Process AI </strong></h2>
+
+
+
+<p>This is&nbsp;AI&nbsp;to automate or improve&nbsp;internal&nbsp;processes,&nbsp;common use cases include: ticket triage,&nbsp;R&amp;D,&nbsp;invoice processing, demand&nbsp;forecasting&nbsp;or&nbsp;knowledge assistants.&nbsp;We&nbsp;are&nbsp;already doing this&nbsp;for years&nbsp;with “classical” AI techniques like machine learning and neural networks, but Generative AI and Agents are creating new&nbsp;opportunities or can enhance existing solutions.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Questions we hear from leadership:</strong>&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li>“How to redesign cross-departmental processes when nobody owns the end-to-end view?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we test and monitor agentic systems that make decisions in production?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we measure the impact of AI on operational efficiency?” </li>
+</ul>
+
+
+
+<p><strong>What makes it&nbsp;hard.&nbsp;</strong>This is where the loudest “where’s the ROI?” conversations&nbsp;happen, because&nbsp;every use case is expected to pay back within a budget cycle.&nbsp;This becomes especially tricky when cross-department processes are redesigned. These&nbsp;processes&nbsp;hold&nbsp;the biggest ROI&nbsp;promise but&nbsp;are&nbsp;also&nbsp;the&nbsp;most&nbsp;organizationally&nbsp;challenging&nbsp;in terms of&nbsp;ownership&nbsp;and governance. A new technical challenge&nbsp;introduced&nbsp;by&nbsp;agentic systems&nbsp;is that they&nbsp;don’t&nbsp;behave like deterministic software. This means that&nbsp;testing and&nbsp;monitoring&nbsp;them reliably&nbsp;require&nbsp;techniques most teams&nbsp;haven’t&nbsp;developed yet.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Investment logic.&nbsp;</strong>Investment&nbsp;in this category&nbsp;is use-case driven, with each initiative funded against a specific business process. The ROI is also the most concrete of the four plays&nbsp;because every project has a defined scope and a clear baseline to compare against:&nbsp;FTE savings, increased throughput, lower error rates. That same precision is what makes scrutiny so high. If you&nbsp;can’t&nbsp;show proof of value&nbsp;within twelve months, the use case&nbsp;might&nbsp;be killed before it gets a chance to scale.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>4. Customer-Facing AI </strong></h2>
+
+
+
+<p>Customer-facing AI&nbsp;is where&nbsp;AI&nbsp;interacts directly with&nbsp;your customers.&nbsp;It’s&nbsp;embedded in your products, apps, and digital channels&nbsp;and owned by teams who are accountable for&nbsp;your brand’s positioning: product, digital, CX,&nbsp;sales&nbsp;or marketing. Applications&nbsp;are&nbsp;chatbots, personalization engines, smart&nbsp;search&nbsp;or&nbsp;AI-generated content.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Questions we hear from leadership:</strong>&nbsp;</p>
+
+
+
+<ul class="wp-block-list">
+<li>“How do we prevent hallucinations and reputational damage when the AI speaks directly to our customers?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“What’s the right degree of automation: fully automated, human-in-the-loop, or AI-assisted?” </li>
+</ul>
+
+
+
+<ul class="wp-block-list">
+<li>“How to make our data AI-ready for personalization at scale when our customer data is fragmented across systems?” </li>
+</ul>
+
+
+
+<p><strong>What makes it&nbsp;hard.&nbsp;</strong>Security, regulatory, and ethical risks effectively turn every release into a compliance event.&nbsp;Hence, building&nbsp;and testing&nbsp;customer-facing&nbsp;AI is a serious engineering discipline, not something you&nbsp;should&nbsp;prototype over a weekend.&nbsp;As&nbsp;“garbage in, garbage out” still applies,&nbsp;high-quality and reliable data&nbsp;is&nbsp;crucial, but&nbsp;it&nbsp;is hard to&nbsp;acquire&nbsp;since&nbsp;customer data&nbsp;is often fragmented&nbsp;across CRM, product, and support systems.&nbsp;&nbsp;</p>
+
+
+
+<p><strong>Investment logic.&nbsp;</strong>The return is measured in commercial outcomes:&nbsp;conversion, retention, NPS, revenue uplift,&nbsp;with brand-reputation risk sitting on the other side of the ledger as a real downside. Payback timelines are longer than for the other plays,&nbsp;as&nbsp;the platform investment is&nbsp;substantial.&nbsp;You should see this type of AI as a&nbsp;product investment rather than IT spend.&nbsp;Hence,&nbsp;the&nbsp;strategic decision sits with your product and commercial leadership.&nbsp;</p>
+
+
+
+<h2 class="wp-block-heading"><strong>How to Build an Effective AI Strategy. The two steps every leadership team should take </strong></h2>
+
+
+
+<p>Concluding:&nbsp;&#8220;AI strategy&#8221; is&nbsp;actually&nbsp;four strategies.&nbsp;How should you&nbsp;proceed?&nbsp;</p>
+
+
+
+<p><strong>Step 1: Be explicit about where AI creates value for you.</strong>&nbsp;Which of the four categories is your priority? Which is secondary? Which&nbsp;aren’t&nbsp;yours to play in right now? Vague answers here cause misaligned investment downstream. If you want a structured way to&nbsp;get to&nbsp;a sharp answer, our&nbsp;<a href="https://xebia.com/artificial-intelligence/ai-strategy-consulting/" target="_blank" rel="noreferrer noopener">AI strategy consulting</a>&nbsp;team runs exactly this diagnostic with leadership teams.&nbsp;</p>
+
+
+
+<p><strong>Step 2: Build a modern Data &amp; AI operating model</strong> that offers real flexibility across architecture, procurement, deployment, change enablement, and governance. Each of the four plays will stress one or more of these dimensions differently. Read more in our companion piece on <a href="https://xebia.com/articles/your-data-ai-operating-model-is-under-pressure-and-innovation-alone-wont-fix-it/" data-type="link" data-id="https://xebia.com/articles/your-data-ai-operating-model-is-under-pressure-and-innovation-alone-wont-fix-it/">how to establish an adaptive and resilient operating model that&#8217;s built to support all four plays at once</a>. </p>
+
+
+
+<p>Thank you for reading. We hope this gives you a sharper lens for the next AI strategy conversation in your organization. </p>
+
+
+
+<p>If you&#8217;d like to discuss which AI priorities make the most sense for your organization, and what operating model is needed to support them, schedule a complimentary strategy consultation with <strong>Steven Nooijen, Head of Data &amp; AI Strategy at Xebia</strong> (author of this article), or one of our regional Data &amp; AI experts. <strong><a href="https://xebia.com/artificial-intelligence/data-ai-operating-model/" data-type="link" data-id="https://xebia.com/artificial-intelligence/data-ai-operating-model/">Book your consultation.</a></strong></p></article>
+
+
+<div>
+  <h2><strong>Frequently Asked Questions</strong></h2>
+  <p></p>
+  <ul>
+    <li>
+  <h2><strong>What are the four value plays of AI strategy?</strong> </h2>
+  <p>The four value plays are personal productivity AI, software development AI, business process AI, and customer-facing AI — each with different goals, challenges, and investment logic. </p></li>
+
+
+<li>
+  <h2><strong>Why do organizations struggle with AI strategy?</strong> </h2>
+  <p>Organizations often mix different AI use cases into one strategy, leading to unclear priorities, misaligned investments, and limited business impact. </p></li>
+
+
+<li>
+  <h2><strong>How should companies prioritize AI investments?</strong> </h2>
+  <p>Companies should first define where AI creates the most value for them, then focus investments on specific value plays instead of spreading efforts across all areas. </p></li>
+
+
+<li>
+  <h2><strong>What is the role of the operating model in AI strategy?</strong> </h2>
+  <p>An operating model ensures that AI initiatives can scale by defining governance, roles, processes, and integration with business and IT. </p></li>
+
+
+<li>
+  <h2><strong>How can organizations get ROI from AI?</strong> </h2>
+  <p>ROI depends on aligning AI use cases with business outcomes, measuring impact clearly, and ensuring adoption across the organization. </p></li>  </ul>
+</div>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
