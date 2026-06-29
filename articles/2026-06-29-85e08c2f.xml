@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Feeling behind AI? Start here.</title>
+      <link>https://xebia.com/blog/feeling-behind-ai-start-here/</link>
+      <guid>https://xebia.com/?p=155904</guid>
+      <pubDate>Mon, 29 Jun 2026 08:59:40 +0000</pubDate>
+      <dc:creator>Giorgia Corrado</dc:creator>
+      <description>A lot of people in tech feel one step behind the AI conversation. This post helps close that gap, from LLM basics to AI agents.</description>
+      <content:encoded><![CDATA[<div>
+  <h1>Feeling behind AI? Start here.</h1>
+  <p>A lot of people in tech feel one step behind the AI conversation. This post is about closing that gap, starting from the beginning.</p>
+</div>
+
+<article>
+  <p>Somewhere between the ChatGPT hype cycle and the flood of AI tools landing in every product roadmap, a lot of people in tech have found themselves in an uncomfortable spot. Not beginners, these are developers, data scientists, Python engineers, ML practitioners who know their craft. But the AI conversation keeps moving fast, the terminology shifts constantly, and suddenly it can feel like everyone else is speaking a language that is almost, but not quite, familiar.</p>
+
+
+
+<p>If that sounds familiar, this post is for you. Not because there is anything wrong with where you are, but because the path forward is clearer than it might feel right now.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Let&#8217;s start with what an LLM actually is</strong></h2>
+
+
+
+<p>A large language model is, at its core, a system trained on enormous amounts of text that has learned to predict the next likely word, sentence, or piece of code. That sounds simple, but the emergent behavior is remarkable: it can write code, explain concepts, summarize documents, translate between languages, and hold a conversation, all because it has seen enough examples of humans doing those things that it learned the patterns.</p>
+
+
+
+<p>When people talk about ChatGPT, Claude, or Gemini, they are talking about products built on top of these models. The model is the engine. The product is the car. Most people have been driving the car. The next interesting step is understanding how the engine works, and what you can build with it when you have access to it directly.</p>
+
+
+<div>
+  <p>When developers interact with LLMs directly, through an API rather than a chat interface, they can control a lot more: what instructions the model receives, what tools it has access to, how it formats its responses, and how it fits into a larger application. That is where things get interesting.</p>
+  <p></p>
+  <p></p>
+</div>
+
+
+<h2 class="wp-block-heading"><strong>So what is an AI agent?</strong></h2>
+
+
+
+<p>This is the term that tends to create the most confusion, mostly because it gets used to mean slightly different things depending on who is talking. Here is a simple way to think about it.</p>
+
+
+
+<p>A standard LLM application does one thing at a time. You ask it something, it responds, done. An AI agent is a system where the model can take a sequence of actions to reach a goal, looking things up, running code, calling an API, deciding what to do next based on what it just found out. It is less like a calculator and more like a very focused assistant that can work through a task step by step, without needing a human to hold its hand at every stage.</p>
+
+
+
+<p>Agents are not magic, and they are not all-powerful. They can go wrong in interesting ways when the task is ambiguous or the tools they have access to do not quite match what they need. Understanding those failure modes is a big part of what makes building with agents genuinely different from building with a standard LLM call.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>Why this is relevant right now</strong></h2>
+
+
+
+<p>The reason AI agents have moved from research curiosity to practical concern is that the tooling has matured enough to make them buildable by regular engineering teams, not just AI researchers. Frameworks exist, cloud providers have built infrastructure around them, and the pattern of &#8220;LLM plus tools plus a loop&#8221; has become a standard way to solve a whole class of problems that were previously hard to automate.</p>
+
+
+
+<p>For developers and data scientists, that means agents are increasingly likely to show up in real project work, whether as something to build, something to integrate, or something to evaluate. Getting comfortable with the concepts before encountering them under deadline pressure is a genuinely useful investment.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>A learning path that builds the whole picture</strong></h2>
+
+
+
+<p>One of the things that makes the AI space feel overwhelming is that the concepts stack on each other. Agents make a lot more sense once you understand how LLMs work. LLMOps, the practice of deploying and monitoring LLM applications in production, makes more sense once you have built something and have seen what breaks. The order in which things are learned matters.</p>
+
+
+
+<p>The Xebia Academy AI curriculum is designed with that progression in mind. It starts with a shared foundation, LLM fundamentals and LLMOps on GCP, and then branches into two tracks depending on what someone wants to build. Both tracks lead to the same place: understanding how to design and work with agentic systems at a level that is actually useful in practice.</p>
+
+
+
+
+
+<h2 class="wp-block-heading">LLM Fundamentals + LLMOps on GCP</h2>
+
+
+
+<p>What language models are, how they work, how to use them well, and how to deploy them reliably on Google Cloud Platform. This is the foundation everything else is built on, relevant whether you are a developer, a data scientist, or a machine learning engineer.</p>
+
+
+
+<p>Check LLM Fundamentals out <a href="https://academy.xebia.com/training/building-llm-applications/?utm_term=&amp;utm_campaign=Demand-Gen+%7C+DataAI+%7C+FY26+%7C+Data+%26+AI+Strategy+and+AI+Governance+PMax+%7C+Global&amp;utm_source=adwords&amp;utm_medium=ppc&amp;hsa_acc=4906259591&amp;hsa_cam=23838596378&amp;hsa_grp=&amp;hsa_ad=&amp;hsa_src=x&amp;hsa_tgt=&amp;hsa_kw=&amp;hsa_mt=&amp;hsa_net=adwords&amp;hsa_ver=3&amp;gad_source=1&amp;gad_campaignid=23838599759&amp;gbraid=0AAAAAoxWTuq8iDQPvfhiNnW5N8pSFlDAh&amp;gclid=Cj0KCQjwiJvQBhCYARIsAMjts3LFApSn0RG0bM9oyoCrL8stq2djBCOlsKTnk_IexTGFbhyr-9aOwkgaAkjzEALw_wcB">here</a> and LLMOps on GCP <a href="https://academy.xebia.com/training/llmops-on-gcp/">here</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Advanced LLM applications</h2>
+
+
+
+<p>Building more sophisticated applications on top of LLMs, things like retrieval systems (RAGs), structured outputs, and evaluation pipelines. A natural next step for developers and data scientists who have the basics and want to build more capable products.</p>
+
+
+
+<p>Check the course <a href="https://academy.xebia.com/training/advanced-llm-applications/">here</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Agentic AI for Developers</h2>
+
+
+
+<p>What agents are, how they work, and how to start building them. This is a foundational course, no prior experience with agents needed. It covers the core concepts, the common patterns, and the practical skills to go from zero to building your first agent.</p>
+
+
+
+<p>Check it out <a href="https://academy.xebia.com/training/agentic-ai-for-developers/">here</a>.</p>
+
+
+
+<h2 class="wp-block-heading">Advanced Agentic AI</h2>
+
+
+
+<p>For those ready to go deeper, more complex agent systems, multiple agents working together, and the operational challenges of running them in real production environments. The capstone of the journey, regardless of which track got you here.</p>
+
+
+
+<p>Take a look at it <a href="https://academy.xebia.com/training/advanced-agentic-ai/">here</a>.</p>
+
+
+
+<h2 class="wp-block-heading"><strong>The best time to build the foundation is before you need it</strong></h2>
+
+
+
+<p>One thing that comes up repeatedly when talking to developers and data scientists who have gone through structured AI training is that the timing mattered. Learning these concepts in a calm, focused setting, before a project with a tight deadline forced the issue, meant they could actually internalise them, ask questions, and practice without pressure.</p>
+
+
+
+<p>AI is not going to slow down and wait for anyone to catch up. But the good news is that the concepts are not as intimidating as the vocabulary sometimes makes them sound. With the right starting point and a clear path through the material, most developers and data scientists find that things click faster than expected.</p>
+
+
+
+<p>That is exactly what a well-designed learning journey is for.</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
