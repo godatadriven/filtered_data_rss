@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>We Built a Parachute for Claude Code. It Became a Harness.</title>
+      <link>https://xebia.com/blog/from-failover-proxy-to-ai-harness/</link>
+      <guid>https://xebia.com/?p=156626</guid>
+      <pubDate>Tue, 21 Jul 2026 07:00:00 +0000</pubDate>
+      <dc:creator>Ricardo Granados</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>We Built a Parachute for Claude Code. It Became a Harness.</h1>
+  <p></p>
+</div>
+
+<article>
+  <p>Six months ago, a colleague told me about Claude Code as the answer to a project I was stuck on, so I decided to give it a try. Today I&#8217;m still a little surprised: &#8220;we,&#8221; Claude Code and I, became a team. We run planning and review sessions, sprints, and retrospectives, the same rituals and cadence I&#8217;ve experienced on every human team I&#8217;ve been part of. I&#8217;ve written before about that <a href="https://xebia.com/blog/responsible-agentic-workflows/">operating model</a> and the <a href="https://xebia.com/blog/ai-data-modeling-context-problem/">context it depends on</a>. This is the story of the harness underneath it, the part I never set out to build.</p>
+
+
+
+
+<h2 class="wp-block-heading">The teammate that kept vanishing</h2>
+
+
+
+
+<p>One night I queued three tasks for my agents and went to sleep. Around 3am, all three hit the rate limit at once. The reset was five hours away, and two hours of their analysis was gone, trapped in logs I couldn&#8217;t recover. That&#8217;s the part people underestimate: when a limit lands on a coordinator running three agents, you don&#8217;t lose one thing. You lose all of it, the context rots before it can be saved, and you pay the tokens again to rebuild it.</p>
+
+
+
+
+<p>We wanted a teammate that didn&#8217;t just stop. But a fixed monthly plan, chosen for predictable cost, has a hard edge: hit the cap and you&#8217;re done, usually mid-experiment, usually late on a Friday.</p>
+
+
+
+
+<p>So we built a parachute.</p>
+
+
+
+
+<h2 class="wp-block-heading">The parachute: a transparent proxy</h2>
+
+
+
+
+<p>We called it the Anthropic Failover Proxy, or AFP. It started as a way to cut token cost: send part of the work to a free local model and keep the rest on the official API. It&#8217;s a transparent reverse proxy that sits between Claude Code and the Anthropic API. You point one environment variable at it:</p>
+
+
+
+
+<pre><code>ANTHROPIC_BASE_URL=http://localhost:8100
+</code></pre>
+
+
+
+
+<p>The catch showed up immediately. A Claude Code session can&#8217;t be split mid-conversation, and once the REPL launches against a backend, that&#8217;s the backend for the whole session, no swapping midstream. So the choice had to be made upfront, every time.</p>
+
+
+
+
+<p>Ollama had just shipped a native way to point Claude Code straight at local models, and I tried it directly first. I couldn&#8217;t get it to hold up reliably. The next option was a platform that lets you use different LLM models through one API, one I&#8217;d bought into a year earlier and barely touched, which actually hosts the real Anthropic models, so in theory the full capability should have been there too. It wasn&#8217;t: its API has its own proprietary shape, it follows neither the OpenAI standard nor the Anthropic one, so even the right model underneath couldn&#8217;t get through the REPL cleanly. When I asked Claude Code whether we could make this work, the answer reframed the problem: it wasn&#8217;t which model answered, it was how that model&#8217;s backend talked to the harness and the REPL, the tool-call protocol underneath. A thin wrapper wouldn&#8217;t cover that.</p>
+
+
+
+
+<p>I didn&#8217;t start by comparing AFP to something like LiteLLM or OpenRouter either. Around the same time, LiteLLM&#8217;s PyPI package was compromised through a poisoned CI dependency that exfiltrated a maintainer&#8217;s publish token, harvesting credentials on install. That put it in context: this was a security concern too. AFP had to translate both ways: responses into a shape the REPL understands, and the REPL&#8217;s expectations back into something the model actually driving the session could use.</p>
+
+
+
+
+<p>When Anthropic is healthy, AFP is invisible. It forwards the request, streams the answer back, and gets out of the way. On a rate limit or an overload it doesn&#8217;t surface the error; it reroutes down a ladder of fallbacks and translates the answer back into the shape Claude Code expects, so the tool never knows it left home.</p>
+
+
+
+
+<p>The first rung below Anthropic was that same platform, sitting on a pool of free credits I&#8217;d never gotten around to using. So when my subscription hit its cap, AFP could route there and keep the same models answering, spending those idle credits instead of paying Anthropic&#8217;s own overage rate.</p>
+
+
+
+
+<p><img decoding="async" alt="Fallback ladder diagram. Claude Code calls AFP on port 8100. AFP prefers the Anthropic API, and on a rate limit or outage steps down through a hosted fallback and then a local model on our own hardware, before an honest 503." src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/from-failover-proxy-to-ai-harness-architecture-ladder.png" title="harness"> <em>The fallback ladder: Anthropic first, a hosted fallback next, a local model on our own hardware after that, and an honest 503 if everything is gone.</em></p>
+
+
+
+
+<p>Making a fallback invisible is harder than it looks. Each backend speaks its own dialect, and Claude Code leans hard on tool calls, which is exactly where naive fallbacks break. One runtime returned tool arguments as a raw string where the validator expected a parsed object, and the call failed silently. Once a fallback has to be drop-in compatible, &#8220;it mostly works&#8221; is not good enough.</p>
+
+
+
+
+<p>We got resilience. But the free credits that came with it ran out fast too, and a hosted fallback is still someone else&#8217;s cloud.</p>
+
+
+
+
+<h2 class="wp-block-heading">Going local, and finding sovereignty</h2>
+
+
+
+
+<p>So we added another rung: a model running locally, on the same MacBook I work on. That fixed the credits problem. What I didn&#8217;t expect was the second problem it solved.</p>
+
+
+
+
+<p>A pattern runs through this whole story. Six months in, most of my project ideas were still in progress, yet I had shipped a steady stream of other things: hooks, gates, routers, fallbacks. Every one was a side quest that built the infrastructure the real work needed. Going local was one. So was the scare that came next.</p>
+
+
+
+
+<p>Testing an app, Claude leaked a token into the chat, and now it was in the context, the history, on its way to Anthropic. That&#8217;s when it clicked: we have to limit what we expose to the agents while still letting them work. That side quest became our hooks and hard gates, an encrypted secrets vault (now replaced by the open-source <a href="https://infisical.com/" rel="nofollow noopener" target="_blank">Infisical</a>), and rules to keep secrets out of the conversation in the first place.</p>
+
+
+
+
+<p>Then, almost at once, three things pulled me toward data sovereignty. A colleague&#8217;s talk on sovereign data platforms got me thinking about who actually controls where data lives and is processed. A conversation with NVIDIA&#8217;s Brev team landed a sharp point: for most companies the ceiling on self-hosting AI isn&#8217;t the model or the budget, it&#8217;s energy, whether your building can power the GPUs. And the Dutch government had just <a href="https://nltimes.nl/2026/05/26/netherlands-blocks-us-takeover-digid-operator-solvinity-security-concerns" rel="nofollow noopener" target="_blank">blocked the sale of Solvinity</a>, which runs DigiD, over exactly this: data on US-owned infrastructure is reachable under the US CLOUD Act.</p>
+
+
+
+
+<p>The loud version of sovereignty is data centers and national capacity. The practical version sits on my desk: can my workflow keep sensitive data on hardware I control, and degrade gracefully when it must?</p>
+
+
+
+
+<p><img decoding="async" alt="A personal laptop on a home desk, wrapped in a dome of soft light that keeps warm data particles inside, while a single thin stream escapes toward a distant, cold cloud data center on the horizon." src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/from-failover-proxy-to-ai-harness-sovereignty-local-first.jpg" title="harness"> <em>Sovereignty, the practical version: keep the sensitive data home, and let only what is allowed leave.</em></p>
+
+
+
+
+<p>That reordered the ladder, local first and cloud as backup, and added a rule: sensitive data is sanitized before anything is sent, or kept out of the chat entirely. That last part is the hard one. Transcripts and internal documents are full of PII, and a name can&#8217;t be hard-gated. I can&#8217;t claim it&#8217;s perfect, or that nothing ever reaches a third party. But it&#8217;s far better than where we started, and still improving.</p>
+
+
+
+
+<p>When something truly can&#8217;t leave the client or Xebia, I don&#8217;t let it into the chat at all, not even locally, because the memory can be read back later. Most people badly underestimate how much they hand their agents every day.</p>
+
+
+
+
+<p>Running a 35-billion-parameter model on a laptop you also work on is its own problem: offloading the experts so only the active parameters sit in GPU memory, and caching Claude Code&#8217;s enormous, constant preamble so it isn&#8217;t reprocessed on every turn. That deserves its own post, and I wrote the setup up separately; a companion piece, <em>Running a local LLM tier for Claude Code on your Mac</em>, is coming soon.</p>
+
+
+
+
+<p>We had a first draft of sovereignty. But by now every request already flowed through this one small proxy, which raised a different question. What else belongs here?</p>
+
+
+
+
+<h2 class="wp-block-heading">The turn: one seam becomes a harness</h2>
+
+
+
+
+<p>The rate limit had taught me where work survives: a helper agent loses its context the moment it&#8217;s interrupted, while a full session keeps its history and memory. So I wanted two full sessions coordinating, not one spawning fragile helpers. The naive version hit two walls, and Claude was blunt about both: it can&#8217;t launch another Claude Code session from inside itself, and by design it only acts on instructions from me, the human in its session, not on messages from another process.</p>
+
+
+
+
+<p>Then I read about a feature Anthropic had shipped, <a href="https://code.claude.com/docs/en/channels" rel="nofollow noopener" target="_blank">channels</a>: a way for a server to push messages into a running Claude Code session as events it can act on. That was the missing half. Another side quest: we built a server, Claude-Nexus. Then it hit us: AFP is already the layer every request passes through, so make it the broker. Only an authorized server may inject messages, behind HMAC-signed authentication, and a human still confirms, per session, that a channel is trusted before acting on its messages. The safety rule isn&#8217;t bypassed; it&#8217;s kept.</p>
+
+
+
+
+<p>That turned the parachute into a hub. Sessions on different machines on my LAN can talk now; I&#8217;ve used it to fix a config problem on one machine from another. Other tools, Codex, Antigravity, and copilot-cli, can join the same conversation. And when I wanted Claude on stage for a talk, I didn&#8217;t give the avatar (Amica) its own model and one more thing to secure. I routed Claude through it instead. Same guardrails, same memory, just a new face.</p>
+
+
+
+
+<p><img decoding="async" alt="Harness diagram. Three surfaces, the Claude Code editor, sessions on other machines over a relay, and the Amica avatar, all feed into AFP, the harness on port 8100. From there one path reaches the models and the local fallback ladder, one reaches shared memory and guardrails, and access is governed in a single place." src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/from-failover-proxy-to-ai-harness-harness-surfaces.png" title="harness"> <em>One seam, many surfaces. Every surface reaches the models, the shared memory, and the guardrails through the same layer, so access is governed in one place.</em></p>
+
+
+
+
+<p>We got a harness: one seam, many surfaces, one place to govern access. But if the valuable part is the layer I built, the routing, the local-first handling, the governance, the connections, what does that make the model?</p>
+
+
+
+
+<h2 class="wp-block-heading">What this actually is: harness engineering</h2>
+
+
+
+
+<p>Here&#8217;s the honest part: I wasn&#8217;t trying to do &#8220;harness engineering.&#8221; Every piece was a side quest forced by a real project, and I just wanted to keep working. Six months in, most of my original ideas were still in progress, yet I had built and shipped all of this scaffolding around them. It was only when I wrote about it in <a href="https://www.linkedin.com/pulse/navigating-data-ai-landscape-ricardo-angel-granados-l%C3%B3pez-v59ze/" rel="nofollow noopener" target="_blank">my newsletter</a> that the side quests turned out to have a name, that I&#8217;d been doing harness engineering empirically the whole time, and that the big labs are now racing to build the same thing.</p>
+
+
+
+
+<p>Nate B Jones puts it well in a recent video, <a href="https://www.youtube.com/watch?v=Zp8lr6IzUnQ" rel="nofollow noopener" target="_blank">&#8220;GLM 5.2 is free and beats Claude on most work, so why can&#8217;t companies switch?&#8221;</a>: a model is &#8220;a brain in a jar&#8221; without a harness, and the bottleneck now is &#8220;the last mile,&#8221; not the model call. I&#8217;d add one inversion. For a frontier lab, the harness is a moat: your context, locked to their platform. Mine does the opposite. Because it can fail over to a local model or another provider, it&#8217;s what keeps me from being captive to any one of them. Same word, opposite purpose.</p>
+
+
+
+
+<p>And none of this is a hobby. My homelab is a sandbox, but the requirements come from real client work, like the client who needs their sensitive stream routed to a local, governed model and everything else sent to a cheaper cloud one. I would rather have worked that out before the question lands. Once I know what&#8217;s safe and what holds up, the pieces move into real work: the way of working, the agents, the review gates, and the parachute are all in a real project now.</p>
+
+
+
+
+<h2 class="wp-block-heading">The trade-offs, honestly</h2>
+
+
+
+
+<p>The local tier is genuinely degraded: a quantized 35B keeps you moving through a limit window, it doesn&#8217;t replace Opus. AFP is single-process by design, which keeps the machine alive but doesn&#8217;t scale sideways without rethinking where the shared state lives. And you are now running infrastructure.</p>
+
+
+
+
+<p>There&#8217;s even a small absurdity to it. When the proxy itself needs a fix, I can&#8217;t always fix it from inside. If Claude tries to repair AFP while its own traffic is routed through AFP, it kicks itself out mid-change. So I keep a plain session, outside the proxy, just to repair the proxy and let us back in. I still watch every terminal when the multi-agent setup is live, because I haven&#8217;t trusted it enough to let it run free.</p>
+
+
+
+
+<h2 class="wp-block-heading">So should you build one?</h2>
+
+
+
+
+<p>I have mixed feelings about this one. I spent a big chunk of six months on what was supposed to be a quick win, so here&#8217;s my honest answer: mostly, no. For most people, the harness Claude Code ships out of the box, and the new functionality the big labs push out almost every week, is plenty. If you run to an SLA and have to maintain what you ship, rolling your own is a bad trade; it&#8217;s more convenient to buy it. If you&#8217;re a builder, or looking to move up in tech, maybe even change careers into it, it&#8217;s still worth learning the concepts, you don&#8217;t necessarily have to build the infrastructure yourself.</p>
+
+
+
+
+<p>And if you do build: know the bill. Every hour I spent on the harness was an hour not spent on the project that needed it. It isn&#8217;t free, and it isn&#8217;t always the right call, so choose your battles. But when you have the time to spend, it compounds.</p>
+
+
+
+
+<p>We&#8217;ve seen this movie. First only the big labs had a decent model; then open source caught up fast; now there are many, and the question stops being &#8220;whose model&#8221; and becomes &#8220;how useful is it, what can it do for my case?&#8221; Increasingly, a specific harness is what answers that, which is why the big labs are racing to build their own.</p>
+
+
+
+
+<p><img decoding="async" alt="A dim futuristic gallery where several distinct modular exo-suits stand in a row of lit alcoves, each fitted with different tools and equipment, while a lone figure seen from behind considers which one to use." src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/from-failover-proxy-to-ai-harness-harness-options.jpg" title="harness"> <em>One core, many shells. Different jobs call for different rigs; you choose the harness the work needs, and the intelligence inside stays the same.</em></p>
+
+
+
+
+<p>The model is becoming a commodity. The harness, the part you build, govern, and keep on your own terms, is the part that is actually yours. Take Claude Design: none of Anthropic&#8217;s models generate images on their own, the harness is what gives them the reach to act like one. If you want that same reach for your own tools, it&#8217;s worth building on purpose.</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
