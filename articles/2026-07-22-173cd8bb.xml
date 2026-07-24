@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <item>
+      <title>Our internal AI agent for expenses: Bonbonnetje 🍬</title>
+      <link>https://xebia.com/blog/bonbonnetje/</link>
+      <guid>https://xebia.com/?p=157040</guid>
+      <pubDate>Wed, 22 Jul 2026 08:00:00 +0000</pubDate>
+      <dc:creator>Jeroen Overschie</dc:creator>
+      <content:encoded><![CDATA[<div>
+  <h1>Our internal AI agent for expenses: Bonbonnetje <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f36c.png" alt="🍬" class="wp-smiley" style="height: 1em; max-height: 1em;" /></h1>
+  <p></p>
+</div>
+
+<article>
+  <p><img decoding="async" alt="Bonbonnetje submission flow demo" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-demo-1.gif" title="bonbonnetje"></p>
+
+
+
+<figcaption class="text-center text-grey-500 text-sm" style="position: relative;bottom: 27px">Submitting expenses with Bonbonnetje.</figcaption>
+
+
+
+<p><strong>Bonbonnetje is an AI Agent running in production</strong> helping Xebians submit expense claims. The Agent is built with Agent Development Kit and is running on Google Cloud Platform. Bonbonnetje is in active use by multiple internal departments and successfully completes hundreds of submissions monthly, helping save both employees and back-office valuable time.</p>
+
+
+
+
+<h2 class="wp-block-heading">Why an Agent for expense claims?</h2>
+
+
+
+
+<p>Why, you might ask &#8211; create an Agent to help you submit your expense claims? Let us explain:</p>
+
+
+
+
+<ul class="wp-block-list">
+<li><strong>Less effort</strong>. Any task you can do in under two minutes, <a href="https://en.wikipedia.org/wiki/Getting_Things_Done#:~:text=immediately%20completed%20and%20checked%20off%20if%20it%20can%20be%20completed%20in%20under%20two%20minutes%0A" rel="nofollow noopener" target="_blank">do it immediately</a>. With Bonbonnetje, we reduce the time spent on processing your expenses to less than a minute. This way, you don&#8217;t need to add more todo items to your todo list &#8211; because we understand you &#8211; it is already long enough.</li>
+<li><strong>Reduced back-office stress</strong>. Our Agent performs policy checks and notifies the employee before they submit. This helps reduce submission errors before they even reach our back-office Finance team, saving time.</li>
+<li><strong>Cost saving</strong>. Time is money. Bonbonnetje helps save precious time for 1) Xebia employees and 2) Xebia back-office alike. This implies a significant yearly cost saving.</li>
+<li><strong>Learning</strong>. What&#8217;s a better way to learn than to actually <em>build</em> and <em>deploy</em>? Building- and maintaining production Agents is <em>hard</em>&#8211; which is the exact thing making it a good practice for our team and beyond.</li>
+<li><strong>Authority</strong>. At Xebia we are shipping production Agents for clients. It is straightforward, then, to build <em>internal</em> Agents too. So, let&#8217;s practice what we preach and Show <em>Our</em> Work! <a href="https://www.goodreads.com/book/show/18290401-show-your-work" rel="nofollow noopener" target="_blank"><img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f609.png" alt="😉" class="wp-smiley" style="height: 1em; max-height: 1em;" /></a></li>
+</ul>
+
+
+
+
+<p>&#8230; and, besides the above, maybe even the most important reason of all: making submitting expenses more <strong>fun</strong>! <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f36c.png" alt="🍬" class="wp-smiley" style="height: 1em; max-height: 1em;" /> How valuable is that, to take an otherwise tedious process in your workweek and turn that into something more enjoyable?</p>
+
+
+
+
+<h2 class="wp-block-heading">Building an Agent that runs and keeps running</h2>
+
+
+
+
+<p>Running Agents in production in a reliable, available and observable fashion is not trivial. It requires one to think on how to do session- and state management, artifact storage, Agent observability and Agent evaluation. We choose <a href="https://cloud.google.com/products/gemini-enterprise-agent-platform" rel="nofollow noopener" target="_blank">Gemini Enterprise Agent Platform</a> for this, formerly known as Vertex AI Agent Engine. Our setup can be visualised as follows:</p>
+
+
+
+
+<p><img decoding="async" alt="alt text" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-arch-under-the-hood.png" title="bonbonnetje"></p>
+
+
+
+
+<p>Let&#8217;s dive into several components in more detail.</p>
+
+
+
+
+<h3 class="wp-block-heading">An Agent in production: the necessary ingredients</h3>
+
+
+
+
+<p>To build Agents several ingredients are needed. We need to define tools, track user conversations in sessions which each have a state, be able to handle artifacts like images, PDFs and other files, and we need to stream responses to the user. That needs to be powered by a model we can pull in, like Gemini 3.1 Flash Lite. That needs to execute in a loop of our choosing and be able to tap into Sub-Agents we define, an orchestrator if you will. We need to be able to plug in custom callbacks into tool calls, LLM calls and other lifecycle events happening, to control the full flow of the Agent. I think you get the gist by now &#8211; this can be quite a lot to manage.</p>
+
+
+
+
+<p>That&#8217;s where an Agentic framework comes in &#8211; an Agentic framework can help us build faster by providing us reusable components. There are many Agentic frameworks by now. We chose <a href="https://adk.dev" rel="nofollow noopener" target="_blank">Google&#8217;s Agent Development Kit (ADK)</a> for this use case. ADK has concepts of sessions, state, memory, artifacts and more. It allows for easy local development with a web interface you can spin up by running <code>adk web</code>. But, most importantly, we are creating a <strong>production</strong> Agent here. That means we need for each of those concepts a scalable solution that can run Cloud-native in a stable manner. We also need proper observability around all our Agent-interactions.</p>
+
+
+
+
+<p>This is where ADK maps towards Gemini Enterprise Agent Platform (formerly Vertex AI Agent Engine), allowing you to consume a <code>SessionService</code>, <code>ArtifactService</code> and an observability stack consisting of Cloud Trace, Cloud Logging and Cloud Monitoring. This is what the stack and the mapping towards the managed offering look like:</p>
+
+
+
+
+<p><img decoding="async" alt="alt text" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-gallery-g5-from-laptop-to-production.png" title="bonbonnetje"></p>
+
+
+
+
+<p>Awesome! We now have the core of the Agent set. To make things operational we do need some Ops. We are using GitHub Actions as a driver for our CI/CD needs, combined with Terraform to spin up relevant Cloud resources:</p>
+
+
+
+
+<p><img decoding="async" alt="alt text" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-gallery-g9-ship-it.png" title="bonbonnetje"></p>
+
+
+
+
+<p>Tip: the <a href="https://github.com/google/agents-cli/tree/main/skills" rel="nofollow noopener" target="_blank">google/agents-cli skills</a> have been very useful in this process.</p>
+
+
+
+
+<h3 class="wp-block-heading">Agent Observability</h3>
+
+
+
+
+<p>Agents are far from deterministic and having proper instrumentation in place so your Agent can be monitored is key. Gemini Enterprise Agent Platform integrates tightly with offerings like Cloud Trace and Cloud Logging. Specifically Cloud Trace comes in very handy, allowing us to instrument all Agent interactions happening in a session. Tool calls, Sub-Agent handoffs, latencies and such. The essential concepts here are traces and spans- where a trace is made up of multiple spans. We can visualise our instrumentation and the managed offerings for observability they target as follows:</p>
+
+
+
+
+<p><img decoding="async" alt="alt text" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-arch-7-observability-sinks.png" title="bonbonnetje"></p>
+
+
+
+
+<p>Please observe in the diagram <code>OTel</code>. This is OpenTelemetry- which <a href="https://cloud.google.com/blog/products/management-tools/opentelemetry-now-in-google-cloud-observability" rel="nofollow noopener" target="_blank">conveniently integrates</a> with Cloud Trace. One such trace can look like the following:</p>
+
+
+
+
+<p><img decoding="async" alt="alt text" src="https://xebiainnovationproject.kinsta.cloud/wp-content/uploads/2026/07/bonbonnetje-cloud-trace-example-screenshot.png" title="bonbonnetje"></p>
+
+
+
+
+<p>&#8230; which visualises, in a trace/span view, one typical Agent interaction with Bonbonnetje. This allows for pinning down latency bottlenecks and easy debugging.</p>
+
+
+
+
+<h3 class="wp-block-heading">Concluding</h3>
+
+
+
+
+<p><strong>Bonbonnetje</strong> is an Agent built to help Xebians both save time in submitting their expenses and making it more fun <img src="https://s.w.org/images/core/emoji/16.0.1/72x72/1f36c.png" alt="🍬" class="wp-smiley" style="height: 1em; max-height: 1em;" />. Because the Agent also feeds back to the user policies that apply to the expense, errors are caught earlier in the ERP pipeline making for back-office time savings too. Bonbonnetje is running stably in production for several months on Gemini Enterprise Agent Platform and was built with Agent Development Kit with an AI team at Xebia Data.</p>
+
+
+
+
+<p>Important aspects of running an Agent in production are an Agent framework, scalable solutions for session-, state- and artifact management, and proper observability mechanics.</p>
+
+
+
+
+<p>Having built something techy that actually saves time makes us very happy. But more than anything- it was also awesome to build. Happy days!</p></article>
+]]></content:encoded>
+    </item>
+  </channel>
+</rss>
